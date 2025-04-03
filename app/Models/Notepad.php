@@ -11,10 +11,13 @@ class Notepad extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
         'expected_modifier_prompt_id',
         'expected_change_prompt_id',
+        'modifier_prompt_id',
+        'change_prompt_id',
         'original_user_id',
-        
+        'is_deleted',
     ];
 
     // リレーション
