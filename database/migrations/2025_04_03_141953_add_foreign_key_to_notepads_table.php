@@ -19,7 +19,7 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->ulid('modifier_prompt_id')->after('explained_change_prompt_id')->nullable();
+            $table->ulid('modifier_prompt_id')->after('expected_change_prompt_id')->nullable();
             $table->foreign('modifier_prompt_id')
                 ->references('id')
                 ->on('modifier_prompts')
