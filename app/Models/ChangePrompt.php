@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 class ChangePrompt extends Model
 {
     use HasUlids;
+    
+    protected $fillable = [
+        'name',
+        'prompt',
+        'is_deleted',
+    ];
 }
