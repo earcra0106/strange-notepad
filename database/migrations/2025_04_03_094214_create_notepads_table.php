@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('notepads', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name')->default('Untitled Notepad');
-            $table->ulid('explained_modifier_prompt_id')->nullable();
-            $table->ulid('explained_change_prompt_id')->nullable();
+            $table->ulid('expected_modifier_prompt_id')->nullable();
+            $table->ulid('expected_change_prompt_id')->nullable();
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
