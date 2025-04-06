@@ -28,7 +28,7 @@ class NotepadController extends Controller
             $notepad->page_count = $pages->where('notepad_id', $notepad->id)->count();
         });
         
-        return Inertia::render('Home', [
+        return Inertia::render('Main/Home', [
             'notepads' => $notepads,
             'pages' => $pages,
         ]);
