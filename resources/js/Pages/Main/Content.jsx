@@ -6,6 +6,14 @@ import { useHomeContext } from "./Contexts/HomeContext";
 const Content = () => {
     const homeContext = useHomeContext();
     const showingPage = homeContext.getShowingPage();
+    const [contentText, setContentText] = useState(() => {
+        if (showingPage) {
+            return showingPage.written_content || "";
+        }
+        return "";
+    });
+    const [charCount, setCharCount] = useState(0);
+    const [maxCharCount] = useState(600);
 
     useEffect(() => {
         if (showingPage) {
@@ -28,10 +36,6 @@ const Content = () => {
             </Box>
         );
     }
-
-    const [contentText, setContentText] = useState(showingPage.written_content);
-    const [charCount, setCharCount] = useState(0);
-    const [maxCharCount] = useState(600);
 
     const handleInputChange = (e) => {
         const newContentText = e.target.value;
