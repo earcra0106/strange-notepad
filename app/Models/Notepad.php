@@ -46,4 +46,9 @@ class Notepad extends Model
     {
         return $this->hasMany(Page::class);
     }
+
+    public function getPageCount()
+    {
+        return $this->pages()->count();
+    }
 }
