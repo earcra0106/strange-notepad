@@ -10,18 +10,37 @@ import {
     MenuItem,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { useHomeContext } from "./Contexts/HomeContext";
 
 const Header = () => {
+    const homeContext = useHomeContext();
+    const showingNotepad = homeContext.getShowingNotepad();
+
+    const modifierPrompt = showingNotepad
+        ? showingNotepad.modifier_prompt
+        : null;
+    const changePrompt = showingNotepad ? showingNotepad.change_prompt : null;
+
     return (
         <>
             <Box p={4} h="100%">
                 <Flex h="100%" justify="space-between">
-                    <Flex direction={"column"}>
-                        <Box fontSize="md">Strange</Box>
-                        <Box textAlign={"left"} fontSize="xl" fontWeight="bold">
-                            Unidentified Notepad
-                        </Box>
-                    </Flex>
+                    {showingNotepad ? (
+                        <Flex direction={"column"}>
+                            <Box fontSize="md">
+                                {modifierPrompt?.name} {changePrompt?.name}
+                            </Box>
+                            <Box
+                                textAlign={"left"}
+                                fontSize="xl"
+                                fontWeight="bold"
+                            >
+                                {showingNotepad.name}
+                            </Box>
+                        </Flex>
+                    ) : (
+                        <Box />
+                    )}
                     {/* SP表示 */}
                     <Box display={{ base: "block", md: "none" }}>
                         <Menu>
