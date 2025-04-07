@@ -1,5 +1,15 @@
 import React from "react";
-import { Box, Flex, Button } from "@chakra-ui/react";
+import {
+    Box,
+    Flex,
+    Button,
+    IconButton,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+} from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
 const Header = () => {
     return (
@@ -12,7 +22,23 @@ const Header = () => {
                             Unidentified Notepad
                         </Box>
                     </Flex>
-                    <Box>
+                    {/* SP表示 */}
+                    <Box display={{ base: "block", md: "none" }}>
+                        <Menu>
+                            <MenuButton
+                                as={IconButton}
+                                aria-label="Options"
+                                icon={<HamburgerIcon />}
+                            />
+                            <MenuList>
+                                <MenuItem>編集</MenuItem>
+                                <MenuItem>ジュモン</MenuItem>
+                                <MenuItem>保存</MenuItem>
+                            </MenuList>
+                        </Menu>
+                    </Box>
+                    {/* PC表示 */}
+                    <Box display={{ base: "none", md: "block" }}>
                         <Button
                             h="100%"
                             mr={2}

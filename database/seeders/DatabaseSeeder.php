@@ -25,33 +25,37 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $testModifierPrompt = ModifierPrompt::factory()->create([
-            'name' => 'test',
-            'prompt' => 'test',
+            'name' => 'テストの特徴をもつ',
+            'prompt' => 'test modifier prompt',
             'is_deleted' => false,
         ]);
 
         $testChangePrompt = ChangePrompt::factory()->create([
-            'name' => 'test',
-            'prompt' => 'test',
+            'name' => 'テストの変更をする',
+            'prompt' => 'test change prompt',
             'is_deleted' => false,
         ]);
 
-        $testNotepad = Notepad::factory()->create([
-            'user_id' => $testUser->id,
-            'name' => 'test',
-            'modifier_prompt_id' => $testModifierPrompt->id,
-            'change_prompt_id' => $testChangePrompt->id,
-            'original_user_id' => $testUser->id,
-            'is_deleted' => false,
-        ]);
-
-        $testpages = [];
+        // Notepadのデータを10個作成
         for ($i = 1; $i <= 10; $i++) {
-            $testpages[] = Page::factory()->create([
-                'notepad_id' => $testNotepad->id,
-                'page_number' => $i,
-                'changed_content' => 'test changed text on page ' . $i,
+            $testNotepad = Notepad::factory()->create([
+                'user_id' => $testUser->id,
+                'name' => 'test notepad ' . $i,
+                'modifier_prompt_id' => $testModifierPrompt->id,
+                'change_prompt_id' => $testChangePrompt->id,
+                'original_user_id' => $testUser->id,
+                'is_deleted' => false,
             ]);
+
+            // Pageのデータを10個作成
+            for ($j = 1; $j <= 10; $j++) {
+                Page::factory()->create([
+                    'notepad_id' => $testNotepad->id,
+                    'page_number' => $j,
+                    'written_content' => 'notepad ' . $i . ' test written text on page ' . $j,
+                    'changed_content' => 'notepad ' . $i . ' test changed text on page ' . $j,
+                ]);
+            }
         }
 
         // 追加のデータを生成

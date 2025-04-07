@@ -1,7 +1,11 @@
 import React from "react";
+import { useHomeContext } from "../Contexts/HomeContext";
 import { Box, Flex, Button } from "@chakra-ui/react";
 
 const Shelf = () => {
+    const homeContext = useHomeContext();
+    const showingPage = homeContext.getShowingPage();
+
     return (
         <Flex p={4} direction="column" h="100%">
             <Button w="100%" mb={2} colorScheme="blue" shadow={"md"}>
@@ -26,20 +30,32 @@ const Shelf = () => {
                     },
                 }}
             >
-                {Array.from({ length: 20 }, (_, i) => (
-                    <Box
+                {homeContext.getAllNotepads().map((notepad, i) => (
+                    <Button
+                        onClick={() => {
+                            homeContext.handleShelfNotepadClick(notepad.id);
+                        }}
+                        w="80%"
                         key={i}
                         p={2}
                         mb={2}
-                        mr={8}
                         bg="red.300"
                         borderRadius="md"
                         color="white"
-                        _hover={{ mr: 4, ml: 4, shadow: "lg" }}
+                        _hover={{ shadow: "md" }}
+                        _active={{ bg: "red.400" }}
                         transition="all 0.2s"
+                        transform={() => {
+                            if (showingPage) {
+                                return showingPage.notepad_id === notepad.id
+                                    ? "translateX(20px)"
+                                    : "none";
+                            }
+                            return "none";
+                        }}
                     >
-                        Item {i + 1}
-                    </Box>
+                        {notepad.name}
+                    </Button>
                 ))}
             </Box>
         </Flex>

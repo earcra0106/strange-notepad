@@ -1,0 +1,70 @@
+import { useState } from "react";
+
+const useHomeContextValue = (notepads) => {
+    const [showingPage, setShowingPage] = useState(null);
+
+    const getAllNotepads = () => {
+        return notepads;
+    };
+
+    const getNotepadById = (id) => {
+        return notepads.find((notepad) => notepad.id === id);
+    };
+
+    const getShowingPage = () => {
+        return showingPage;
+    };
+
+    const getPageById = (notepad_id, page_id) => {
+        return notepads
+            .find((notepad) => notepad.id === notepad_id)
+            .pages.find((page) => page.id === page_id);
+    };
+
+    const getPageByPageNumber = (notepad_id, page_number) => {
+        return notepads
+            .find((notepad) => notepad.id === notepad_id)
+            .pages.find((page) => page.page_number === page_number);
+    };
+
+    const getPageCount = (notepad_id) => {
+        return notepads.find((notepad) => notepad.id === notepad_id).pages
+            .length;
+    };
+
+    // Shelf内項目をクリックしたときの処理
+    const handleShelfNotepadClick = (notepad_id) => {
+        const page = getPageByPageNumber(notepad_id, 1);
+        if (!page) {
+            console.log("ページが見つかりませんでした");
+            return;
+        }
+
+        setShowingPage(page);
+    };
+
+    // Pageをめくるときの処理
+    const handlePageChange = (notepad_id, page_number) => {
+        const page = getPageByPageNumber(notepad_id, page_number);
+        if (!page) {
+            console.log("ページが見つかりませんでした");
+            return;
+        }
+
+        setShowingPage(page);
+    };
+
+    return {
+        getShowingPage,
+        setShowingPage,
+        getAllNotepads,
+        getNotepadById,
+        getPageById,
+        getPageByPageNumber,
+        getPageCount,
+        handleShelfNotepadClick,
+        handlePageChange,
+    };
+};
+
+export default useHomeContextValue;

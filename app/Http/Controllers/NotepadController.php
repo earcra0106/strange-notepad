@@ -20,14 +20,8 @@ class NotepadController extends Controller
             ->where('is_deleted', false)
             ->get();
 
-        // メモ帳に紐づいたページを取得
-        $pages = Page::whereIn('notepad_id', $notepads->pluck('id'))
-            ->orderBy('page_number')
-            ->get();
-
         return Inertia::render('Main/Home', [
             'notepads' => $notepads,
-            'pages' => $pages,
         ]);
     }
 

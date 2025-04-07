@@ -29,12 +29,12 @@ class Notepad extends Model
 
     public function modifierPrompt()
     {
-        return $this->belongsTo(ModifierPrompt::class, 'expected_modifier_prompt_id');
+        return $this->belongsTo(ModifierPrompt::class);
     }
 
     public function changePrompt()
     {
-        return $this->belongsTo(ChangePrompt::class, 'expected_change_prompt_id');
+        return $this->belongsTo(ChangePrompt::class);
     }
 
     public function originalUser()
@@ -45,10 +45,5 @@ class Notepad extends Model
     public function pages()
     {
         return $this->hasMany(Page::class);
-    }
-
-    public function getPageCount()
-    {
-        return $this->pages()->count();
     }
 }
