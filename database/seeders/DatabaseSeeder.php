@@ -18,13 +18,44 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(5)->create();
+        $testUser = User::factory()->create([
+            'name' => 'test',
+            'email' => 'test@test',
+            'password' => bcrypt('test'),
+        ]);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        
+        $testModifierPrompt = ModifierPrompt::factory()->create([
+            'name' => 'test',
+            'prompt' => 'test',
+            'is_deleted' => false,
+        ]);
+
+        $testChangePrompt = ChangePrompt::factory()->create([
+            'name' => 'test',
+            'prompt' => 'test',
+            'is_deleted' => false,
+        ]);
+
+        $testNotepad = Notepad::factory()->create([
+            'user_id' => $testUser->id,
+            'name' => 'test',
+            'modifier_prompt_id' => $testModifierPrompt->id,
+            'change_prompt_id' => $testChangePrompt->id,
+            'original_user_id' => $testUser->id,
+            'is_deleted' => false,
+        ]);
+
+        $testpages = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $testpages[] = Page::factory()->create([
+                'notepad_id' => $testNotepad->id,
+                'page_number' => $i,
+                'changed_content' => 'test changed text on page ' . $i,
+            ]);
+        }
+
+        // 追加のデータを生成
+        User::factory(5)->create();
         ModifierPrompt::factory(5)->create();
         ChangePrompt::factory(5)->create();
         Notepad::factory(5)->create();
