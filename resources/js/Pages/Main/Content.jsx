@@ -1,11 +1,46 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { Box, Text, Flex } from "@chakra-ui/react";
+import { useHomeContext } from "./Contexts/HomeContext";
 
 const Content = () => {
-    const [charCount, setCharCount] = React.useState(0);
-    const [maxCharCount, setMaxCharCount] = React.useState(600);
+    const homeContext = useHomeContext();
+    const showingPage = homeContext.getShowingPage();
+    const [contentText, setContentText] = useState(() => {
+        if (showingPage) {
+            return showingPage.written_content || "";
+        }
+        return "";
+    });
+    const [charCount, setCharCount] = useState(0);
+    const [maxCharCount] = useState(600);
+
+    useEffect(() => {
+        if (showingPage) {
+            setContentText(showingPage.written_content || "");
+            setCharCount((showingPage.written_content || "").length);
+        }
+    }, [showingPage]);
+
+    if (!showingPage) {
+        return (
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                h="100%"
+                color="rgba(0, 0, 0, 0.5)"
+            >
+                メモ帳を選択しましょう
+            </Box>
+        );
+    }
+
     const handleInputChange = (e) => {
-        setCharCount(e.target.value.length);
+        const newContentText = e.target.value;
+        setContentText(newContentText);
+        setCharCount(newContentText.length);
     };
 
     return (
@@ -46,7 +81,8 @@ const Content = () => {
                             outline="none"
                             resize="none"
                             bg="transparent"
-                        />
+                            value={contentText}
+                        ></Box>
                         <Text
                             textAlign="right"
                             fontSize="sm"

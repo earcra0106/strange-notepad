@@ -20,17 +20,35 @@ class NotepadController extends Controller
             ->where('is_deleted', false)
             ->get();
 
-        // メモ帳に紐づいたページを取得
-        $pages = Page::whereIn('notepad_id', $notepads->pluck('id'))->get();
-
-        // メモ帳のページ数をカウント
-        $notepads->each(function ($notepad) use ($pages) {
-            $notepad->page_count = $pages->where('notepad_id', $notepad->id)->count();
-        });
-        
         return Inertia::render('Main/Home', [
             'notepads' => $notepads,
-            'pages' => $pages,
+        ]);
+    }
+
+    public function create()
+    {
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $notepad = Notepad::create([
+            'user_id' => auth()->id(),
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('notepad.index')->with('success', 'Notepad created successfully.');
+    }
+
+    public function show(Notepad $notepad)
+    {
+        return Inertia::render('Notepad/Show', [
+            'notepad' => $notepad->load(['modifierPrompt', 'changePrompt', 'originalUser']),
         ]);
     }
 }
