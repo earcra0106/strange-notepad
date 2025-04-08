@@ -1,15 +1,26 @@
 import React from "react";
 import { useHomeContext } from "../Contexts/HomeContext";
 import { Box, Flex, Button } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 
 const Shelf = () => {
     const homeContext = useHomeContext();
     const showingPage = homeContext.getShowingPage();
 
+    // 新着順で取得する
+    const notepads = homeContext.getAllNotepads().toReversed();
+
     return (
         <Flex p={4} direction="column" h="100%">
-            <Button w="100%" mb={2} colorScheme="blue" shadow={"md"}>
-                + New Notepad
+            <Button
+                onClick={homeContext.handleNewNotepadClick}
+                w="100%"
+                mb={2}
+                colorScheme="blue"
+                shadow={"md"}
+                leftIcon={<AddIcon />}
+            >
+                新規メモ帳
             </Button>
             <Box
                 flex="1"
@@ -30,7 +41,7 @@ const Shelf = () => {
                     },
                 }}
             >
-                {homeContext.getAllNotepads().map((notepad, i) => (
+                {notepads.map((notepad, i) => (
                     <Button
                         onClick={() => {
                             homeContext.handleShelfNotepadClick(notepad.id);
