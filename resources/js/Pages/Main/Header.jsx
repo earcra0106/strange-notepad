@@ -26,66 +26,83 @@ const Header = () => {
             <Box p={4} h="100%">
                 <Flex h="100%" justify="space-between">
                     {showingNotepad ? (
-                        <Flex direction={"column"}>
-                            <Box fontSize="md">
-                                {modifierPrompt?.name} {changePrompt?.name}
+                        <>
+                            <Flex direction={"column"}>
+                                <Box fontSize="md">
+                                    {modifierPrompt?.name} {changePrompt?.name}
+                                </Box>
+                                <Box
+                                    textAlign={"left"}
+                                    fontSize="xl"
+                                    fontWeight="bold"
+                                >
+                                    {showingNotepad.name}
+                                </Box>
+                            </Flex>
+                            {/* SP表示 */}
+                            <Box display={{ base: "block", md: "none" }}>
+                                <Menu>
+                                    <MenuButton
+                                        as={IconButton}
+                                        aria-label="Options"
+                                        icon={<HamburgerIcon />}
+                                    />
+                                    <MenuList>
+                                        <MenuItem>ジュモン</MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                homeContext.handleDeleteNotepadClick(
+                                                    showingNotepad.id
+                                                );
+                                            }}
+                                            color="red.500"
+                                        >
+                                            メモ帳を削除
+                                        </MenuItem>
+                                        <MenuItem>ページを保存</MenuItem>
+                                    </MenuList>
+                                </Menu>
                             </Box>
-                            <Box
-                                textAlign={"left"}
-                                fontSize="xl"
-                                fontWeight="bold"
-                            >
-                                {showingNotepad.name}
+                            {/* PC表示 */}
+                            <Box display={{ base: "none", md: "block" }}>
+                                <Button
+                                    h="100%"
+                                    mr={2}
+                                    minW="120px"
+                                    fontSize="lg"
+                                    shadow={"md"}
+                                >
+                                    ジュモン
+                                </Button>
+                                <Button
+                                    h="100%"
+                                    mr={2}
+                                    minW="120px"
+                                    fontSize="lg"
+                                    shadow={"md"}
+                                    colorScheme="red"
+                                    onClick={() => {
+                                        homeContext.handleDeleteNotepadClick(
+                                            showingNotepad.id
+                                        );
+                                    }}
+                                >
+                                    メモ帳を削除
+                                </Button>
+                                <Button
+                                    h="100%"
+                                    minW="120px"
+                                    fontSize="lg"
+                                    colorScheme="blue"
+                                    shadow={"md"}
+                                >
+                                    ページを保存
+                                </Button>
                             </Box>
-                        </Flex>
+                        </>
                     ) : (
                         <Box />
                     )}
-                    {/* SP表示 */}
-                    <Box display={{ base: "block", md: "none" }}>
-                        <Menu>
-                            <MenuButton
-                                as={IconButton}
-                                aria-label="Options"
-                                icon={<HamburgerIcon />}
-                            />
-                            <MenuList>
-                                <MenuItem>編集</MenuItem>
-                                <MenuItem>ジュモン</MenuItem>
-                                <MenuItem>保存</MenuItem>
-                            </MenuList>
-                        </Menu>
-                    </Box>
-                    {/* PC表示 */}
-                    <Box display={{ base: "none", md: "block" }}>
-                        <Button
-                            h="100%"
-                            mr={2}
-                            minW="160px"
-                            fontSize="xl"
-                            shadow={"md"}
-                        >
-                            menu
-                        </Button>
-                        <Button
-                            h="100%"
-                            mr={2}
-                            minW="160px"
-                            fontSize="xl"
-                            shadow={"md"}
-                        >
-                            prompt
-                        </Button>
-                        <Button
-                            h="100%"
-                            minW="160px"
-                            fontSize="xl"
-                            colorScheme="blue"
-                            shadow={"md"}
-                        >
-                            save
-                        </Button>
-                    </Box>
                 </Flex>
             </Box>
         </>

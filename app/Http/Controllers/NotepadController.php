@@ -57,10 +57,23 @@ class NotepadController extends Controller
         return response()->json($notepad);
     }
 
-    public function show(Notepad $notepad)
+    public function destroy(Request $request)
     {
-        return Inertia::render('Notepad/Show', [
-            'notepad' => $notepad->load(['modifierPrompt', 'changePrompt', 'originalUser']),
-        ]);
+        $notepad_id = $request->input('notepad_id');
+        
+        if (!$notepad_id) {
+            return response()->json(['message' => 'Notepad ID is required'], 400);
+        }
+
+        $notepad = Notepad::where('user_id', auth()->id())
+            ->where('id', $notepad_id)
+            ->where('is_deleted', false)
+            ->first();
+        if ($notepad) {
+            $notepad->is_deleted = true;
+            $notepad->save();
+        }
+
+        return response()->json(['message' => 'Notepad deleted successfully']);
     }
 }

@@ -19,6 +19,8 @@ const Shelf = () => {
                 colorScheme="blue"
                 shadow={"md"}
                 leftIcon={<AddIcon />}
+                whiteSpace="nowrap"
+                overflow="hidden"
             >
                 新規メモ帳
             </Button>
@@ -30,6 +32,7 @@ const Shelf = () => {
                 borderRadius="md"
                 css={{
                     "&::-webkit-scrollbar": {
+                        height: "8px",
                         width: "8px",
                     },
                     "&::-webkit-scrollbar-thumb": {
@@ -56,6 +59,10 @@ const Shelf = () => {
                         _hover={{ shadow: "md" }}
                         _active={{ bg: "red.400" }}
                         transition="all 0.2s"
+                        justifyContent="flex-start"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
                         transform={() => {
                             if (showingPage) {
                                 return showingPage.notepad_id === notepad.id
