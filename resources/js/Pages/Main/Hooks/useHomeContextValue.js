@@ -1,18 +1,20 @@
 import { useState } from "react";
+import axios from "axios";
 
 const useHomeContextValue = (notepads) => {
     const [showingPage, setShowingPage] = useState(null);
+    const [allNotepads, setAllNotepads] = useState(notepads);
 
     const getShowingPage = () => {
         return showingPage;
     };
 
     const getAllNotepads = () => {
-        return notepads;
+        return allNotepads;
     };
 
     const getNotepadById = (id) => {
-        return notepads.find((notepad) => notepad.id === id);
+        return allNotepads.find((notepad) => notepad.id === id);
     };
 
     const getShowingNotepad = () => {
@@ -20,29 +22,29 @@ const useHomeContextValue = (notepads) => {
     };
 
     const getPageById = (notepad_id, page_id) => {
-        return notepads
+        return allNotepads
             .find((notepad) => notepad.id === notepad_id)
             .pages.find((page) => page.id === page_id);
     };
 
     const getPageByPageNumber = (notepad_id, page_number) => {
-        return notepads
+        return allNotepads
             .find((notepad) => notepad.id === notepad_id)
             .pages.find((page) => page.page_number === page_number);
     };
 
     const getPageCount = (notepad_id) => {
-        return notepads.find((notepad) => notepad.id === notepad_id).pages
+        return allNotepads.find((notepad) => notepad.id === notepad_id).pages
             .length;
     };
 
     const getModifierPromptByNotepadId = (notepad_id) => {
-        return notepads.find((notepad) => notepad.id === notepad_id)
+        return allNotepads.find((notepad) => notepad.id === notepad_id)
             .modifier_prompt;
     };
 
     const getChangePromptByNotepadId = (notepad_id) => {
-        return notepads.find((notepad) => notepad.id === notepad_id)
+        return allNotepads.find((notepad) => notepad.id === notepad_id)
             .change_prompt;
     };
 
@@ -70,6 +72,18 @@ const useHomeContextValue = (notepads) => {
         setShowingPage(page);
     };
 
+    // Notepadを新規作成する処理
+    const handleNewNotepadClick = async () => {
+        try {
+            const response = await axios.post("/home");
+
+            const newNotepad = response.data;
+            setAllNotepads((prevNotepads) => [...prevNotepads, newNotepad]);
+        } catch (error) {
+            console.error("メモ帳の作成に失敗しました:", error);
+        }
+    };
+
     return {
         getShowingPage,
         setShowingPage,
@@ -83,6 +97,7 @@ const useHomeContextValue = (notepads) => {
         getChangePromptByNotepadId,
         handleShelfNotepadClick,
         handlePageChange,
+        handleNewNotepadClick,
     };
 };
 
