@@ -84,6 +84,29 @@ const useHomeContextValue = (notepads) => {
         }
     };
 
+    const handleDeleteNotepadClick = async (notepad_id) => {
+        try {
+            if (
+                !confirm(
+                    "選択中のメモ帳を削除しますか？\n\nこの操作は取り消せません。"
+                )
+            ) {
+                return;
+            }
+
+            const response = await axios.delete(`/home`, {
+                data: { notepad_id: notepad_id },
+            });
+
+            setShowingPage(null);
+            setAllNotepads((prevNotepads) =>
+                prevNotepads.filter((notepad) => notepad.id !== notepad_id)
+            );
+        } catch (error) {
+            console.error("メモ帳の削除に失敗しました:", error);
+        }
+    };
+
     return {
         getShowingPage,
         setShowingPage,
@@ -98,6 +121,7 @@ const useHomeContextValue = (notepads) => {
         handleShelfNotepadClick,
         handlePageChange,
         handleNewNotepadClick,
+        handleDeleteNotepadClick,
     };
 };
 
