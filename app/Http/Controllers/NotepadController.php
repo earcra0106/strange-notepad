@@ -14,7 +14,6 @@ class NotepadController extends Controller
      */
     public function index()
     {
-        // ユーザーのメモ帳を取得
         $notepads = Notepad::where('user_id', auth()->id())
             ->with(['modifierPrompt', 'changePrompt', 'originalUser', 'pages'])
             ->where('is_deleted', false)
@@ -25,8 +24,12 @@ class NotepadController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
+        
     }
 
     public function store(Request $request)
