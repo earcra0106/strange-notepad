@@ -18,8 +18,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    // return redirect('/home');
-    return Inertia::render('Dashboard');
+    return redirect('/home');
+    // return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
