@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { Box, Flex, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { useHomeContext } from "./Contexts/HomeContext";
@@ -6,6 +7,16 @@ import { useHomeContext } from "./Contexts/HomeContext";
 const Footer = () => {
     const homeContext = useHomeContext();
     const showingPage = homeContext.getShowingPage();
+
+    const [currentPageNumber, setCurrentPageNumber] = useState(0);
+    const [totalPageCount, setTotalPageCount] = useState(0);
+
+    useEffect(() => {
+        if (showingPage) {
+            setCurrentPageNumber(showingPage.page_number);
+            setTotalPageCount(homeContext.getPageCount(showingPage.notepad_id));
+        }
+    }, [showingPage]);
 
     if (!showingPage) {
         return <></>;
@@ -34,10 +45,7 @@ const Footer = () => {
                                 isDisabled={showingPage.page_number <= 1}
                             />
                             <Box flex={1} textAlign="center">
-                                ページ {showingPage.page_number} /{" "}
-                                {homeContext.getPageCount(
-                                    showingPage.notepad_id
-                                )}
+                                ページ {currentPageNumber} / {totalPageCount}
                             </Box>
                             <IconButton
                                 icon={<ChevronRightIcon />}
@@ -50,10 +58,7 @@ const Footer = () => {
                                     );
                                 }}
                                 isDisabled={
-                                    showingPage.page_number >=
-                                    homeContext.getPageCount(
-                                        showingPage.notepad_id
-                                    )
+                                    showingPage.page_number >= totalPageCount
                                 }
                             />
                         </Flex>

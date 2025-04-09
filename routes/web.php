@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\NotepadController;
+use App\Http\Controllers\PageController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -25,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/home', [NotepadController::class, 'store'])->name('notepad.store');
     Route::delete('/home', [NotepadController::class, 'destroy'])->name('notepad.destroy');
+    Route::patch('/home/notepad', [NotepadController::class, 'update'])->name('notepad.update');
+    Route::patch('/home/page', [PageController::class, 'update'])->name('page.udate');
 });
 
 Route::get('/home', [NotepadController::class, 'index'])->name('notepad.index');

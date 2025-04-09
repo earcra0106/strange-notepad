@@ -1,9 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 
-const useHomeContextValue = (notepads) => {
-    const [showingPage, setShowingPage] = useState(null);
+const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const [allNotepads, setAllNotepads] = useState(notepads);
+    const [showingPage, setShowingPage] = useState(null);
+    const [currentContentText, setCurrentContentText] = useState("");
 
     const getShowingPage = () => {
         return showingPage;
@@ -13,12 +14,18 @@ const useHomeContextValue = (notepads) => {
         return allNotepads;
     };
 
+    const getCurrentContentText = () => {
+        return currentContentText;
+    };
+
     const getNotepadById = (id) => {
         return allNotepads.find((notepad) => notepad.id === id);
     };
 
     const getShowingNotepad = () => {
-        return showingPage ? getNotepadById(showingPage.notepad_id) : null;
+        return getShowingPage()
+            ? getNotepadById(getShowingPage().notepad_id)
+            : null;
     };
 
     const getPageById = (notepad_id, page_id) => {
@@ -28,24 +35,64 @@ const useHomeContextValue = (notepads) => {
     };
 
     const getPageByPageNumber = (notepad_id, page_number) => {
+        console.log(
+            allNotepads.find((notepad) => notepad.id === notepad_id).pages
+        );
         return allNotepads
             .find((notepad) => notepad.id === notepad_id)
             .pages.find((page) => page.page_number === page_number);
     };
 
     const getPageCount = (notepad_id) => {
-        return allNotepads.find((notepad) => notepad.id === notepad_id).pages
-            .length;
+        try {
+            const notepad = allNotepads.find(
+                (notepad) => notepad.id === notepad_id
+            );
+            if (!notepad) {
+                console.error(
+                    `getPageCount(${notepad_id}): メモ帳が見つかりません`
+                );
+                return 0;
+            }
+
+            return notepad.pages.length;
+        } catch (error) {
+            console.error(
+                `getPageCount(${notepad_id})ページ数の取得に失敗しました:`,
+                error
+            );
+            return 0;
+        }
     };
 
-    const getModifierPromptByNotepadId = (notepad_id) => {
+    const getModifierPromptOfNotepadByNotepadId = (notepad_id) => {
         return allNotepads.find((notepad) => notepad.id === notepad_id)
             .modifier_prompt;
     };
 
-    const getChangePromptByNotepadId = (notepad_id) => {
+    const getChangePromptOfNotepadByNotepadId = (notepad_id) => {
         return allNotepads.find((notepad) => notepad.id === notepad_id)
             .change_prompt;
+    };
+
+    const getAllModifierPrompts = () => {
+        return modifierPrompts;
+    };
+
+    const getAllChangePrompts = () => {
+        return changePrompts;
+    };
+
+    const getModifierPromptById = (modifier_prompt_id) => {
+        return modifierPrompts.find(
+            (modifier_prompt) => modifier_prompt.id === modifier_prompt_id
+        );
+    };
+
+    const getChangePromptById = (change_prompt_id) => {
+        return changePrompts.find(
+            (change_prompt) => change_prompt.id === change_prompt_id
+        );
     };
 
     // Shelf内項目をクリックしたときの処理
@@ -107,21 +154,98 @@ const useHomeContextValue = (notepads) => {
         }
     };
 
+    // Notepadの情報を変更するときの処理
+    const handleUpdateNotepadClick = async (notepad_id, new_name = null) => {
+        try {
+            const response = await axios.patch("/home/notepad", {
+                notepad_id: notepad_id,
+                new_name: new_name,
+            });
+
+            setAllNotepads((prevNotepads) =>
+                prevNotepads.map((notepad) =>
+                    notepad.id === notepad_id
+                        ? {
+                              ...notepad,
+                              name: new_name || notepad.name,
+                          }
+                        : notepad
+                )
+            );
+        } catch (error) {
+            console.error("メモ帳の変更に失敗しました:", error);
+        }
+    };
+
+    const handleSaveShowingPageClick = async () => {
+        try {
+            const response = await axios.patch("/home/page", {
+                page_id: getShowingPage().id,
+                new_written_content: getCurrentContentText(),
+            });
+
+            const new_page = response.data;
+
+            setShowingPage((prevPage) => ({
+                ...prevPage,
+                written_content: new_page.written_content,
+            }));
+
+            setAllNotepads((prevNotepads) =>
+                prevNotepads.map((notepad) => {
+                    if (notepad.id !== new_page.notepad_id) return notepad;
+
+                    return {
+                        ...notepad,
+                        pages: notepad.pages.map((page) =>
+                            page.id === new_page.id
+                                ? {
+                                      ...page,
+                                      written_content: new_page.written_content,
+                                  }
+                                : page
+                        ),
+                    };
+                })
+            );
+
+            console.log("ページの変更に成功しました:", new_page);
+        } catch (error) {
+            console.error("ページの変更に失敗しました:", error);
+        }
+    };
+
     return {
         getShowingPage,
         setShowingPage,
+
         getAllNotepads,
+        setAllNotepads,
+
+        getCurrentContentText,
+        setCurrentContentText,
+
         getNotepadById,
         getShowingNotepad,
+
         getPageById,
         getPageByPageNumber,
         getPageCount,
-        getModifierPromptByNotepadId,
-        getChangePromptByNotepadId,
+
+        getModifierPromptOfNotepadByNotepadId,
+        getChangePromptOfNotepadByNotepadId,
+
+        getAllModifierPrompts,
+        getAllChangePrompts,
+        getModifierPromptById,
+        getChangePromptById,
+
         handleShelfNotepadClick,
         handlePageChange,
         handleNewNotepadClick,
         handleDeleteNotepadClick,
+        handleUpdateNotepadClick,
+        handleSaveShowingPageClick,
     };
 };
 

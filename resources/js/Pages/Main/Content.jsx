@@ -6,18 +6,15 @@ import { useHomeContext } from "./Contexts/HomeContext";
 const Content = () => {
     const homeContext = useHomeContext();
     const showingPage = homeContext.getShowingPage();
-    const [contentText, setContentText] = useState(() => {
-        if (showingPage) {
-            return showingPage.written_content || "";
-        }
-        return "";
-    });
+
     const [charCount, setCharCount] = useState(0);
     const [maxCharCount] = useState(600);
 
     useEffect(() => {
         if (showingPage) {
-            setContentText(showingPage.written_content || "");
+            homeContext.setCurrentContentText(
+                showingPage.written_content || ""
+            );
             setCharCount((showingPage.written_content || "").length);
         }
     }, [showingPage]);
@@ -39,7 +36,7 @@ const Content = () => {
 
     const handleInputChange = (e) => {
         const newContentText = e.target.value;
-        setContentText(newContentText);
+        homeContext.setCurrentContentText(newContentText);
         setCharCount(newContentText.length);
     };
 
@@ -81,7 +78,7 @@ const Content = () => {
                             outline="none"
                             resize="none"
                             bg="transparent"
-                            value={contentText}
+                            value={homeContext.getCurrentContentText()}
                         ></Box>
                         <Text
                             textAlign="right"
