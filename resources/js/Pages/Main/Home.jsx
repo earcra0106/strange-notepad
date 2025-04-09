@@ -24,7 +24,7 @@ const Home = ({ notepads }) => {
                             </Box>
                             <Flex direction="column" w="75%">
                                 {/* Header */}
-                                <Box h="15%" bg="blue.100">
+                                <Box h="20%" bg="blue.100">
                                     <Header />
                                 </Box>
                                 {/* Content */}

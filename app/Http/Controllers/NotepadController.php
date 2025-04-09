@@ -23,6 +23,8 @@ class NotepadController extends Controller
 
         return Inertia::render('Main/Home', [
             'notepads' => $notepads,
+            'modifierPrompts' => ModifierPrompt::where('is_deleted', false)->get(),
+            'changePrompts' => ChangePrompt::where('is_deleted', false)->get(),
         ]);
     }
 
@@ -57,16 +59,46 @@ class NotepadController extends Controller
         return response()->json($notepad);
     }
 
-    public function destroy(Request $request)
+    public function update(Request $request)
     {
-        $notepad_id = $request->input('notepad_id');
+        $notepadId = $request->input('notepad_id');
         
-        if (!$notepad_id) {
+        if (!$notepadId) {
             return response()->json(['message' => 'Notepad ID is required'], 400);
         }
 
         $notepad = Notepad::where('user_id', auth()->id())
-            ->where('id', $notepad_id)
+            ->where('id', $notepadId)
+            ->where('is_deleted', false)
+            ->first();
+
+        if (!$notepad) {
+            return response()->json(['message' => 'Notepad not found'], 404);
+        }
+
+        $newName = $request->input('new_name');
+        $newExpectedModifierPrompt_id = $request->input('new_expected_modifier_prompt_id');
+        $newExpectedChangePrompt_id = $request->input('new_expected_change_prompt_id');
+
+        $notepad->name = $newName ?? $notepad->name;
+        $notepad->expected_modifier_prompt_id = $newExpectedModifierPrompt_id ?? $notepad->expected_modifier_prompt_id;
+        $notepad->expected_change_prompt_id = $newExpectedChangePrompt_id ?? $notepad->expected_change_prompt_id;
+        $notepad->save();
+        $notepad->load(['modifierPrompt', 'changePrompt', 'originalUser', 'pages']);
+
+        return response()->json($notepad);
+    }
+
+    public function destroy(Request $request)
+    {
+        $notepadId = $request->input('notepad_id');
+        
+        if (!$notepadId) {
+            return response()->json(['message' => 'Notepad ID is required'], 400);
+        }
+
+        $notepad = Notepad::where('user_id', auth()->id())
+            ->where('id', $notepadId)
             ->where('is_deleted', false)
             ->first();
         if ($notepad) {

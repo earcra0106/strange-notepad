@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import {
     Box,
     Flex,
@@ -8,18 +9,33 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
+    Input,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { useHomeContext } from "./Contexts/HomeContext";
 
 const Header = () => {
     const homeContext = useHomeContext();
     const showingNotepad = homeContext.getShowingNotepad();
+    const showingPage = homeContext.getShowingPage();
 
-    const modifierPrompt = showingNotepad
-        ? showingNotepad.modifier_prompt
-        : null;
-    const changePrompt = showingNotepad ? showingNotepad.change_prompt : null;
+    const [isEditingNotepadName, setIsEditingNotepadName] = useState(false);
+    const [notepadName, setNotepadName] = useState("");
+    const [expectedModifierPrompt, setExpectedModifierPrompt] = useState("");
+    const [expectedChangePrompt, setExpectedChangePrompt] = useState("");
+
+    useEffect(() => {
+        if (showingNotepad) {
+            setIsEditingNotepadName(false);
+            setNotepadName(showingNotepad.name);
+            setExpectedModifierPrompt(showingNotepad.expected_modifier_prompt);
+            setExpectedChangePrompt(showingNotepad.expected_change_prompt);
+        }
+    }, [showingNotepad]);
+
+    const handleInputChange = (e) => {
+        setNotepadName(e.target.value);
+    };
 
     return (
         <>
@@ -29,15 +45,71 @@ const Header = () => {
                         <>
                             <Flex direction={"column"}>
                                 <Box fontSize="md">
-                                    {modifierPrompt?.name} {changePrompt?.name}
+                                    {expectedModifierPrompt
+                                        ? expectedModifierPrompt.name
+                                        : "ある特徴をもつ"}{" "}
+                                    {expectedChangePrompt
+                                        ? expectedChangePrompt.name
+                                        : "何かが起こる"}
                                 </Box>
-                                <Box
-                                    textAlign={"left"}
-                                    fontSize="xl"
-                                    fontWeight="bold"
-                                >
-                                    {showingNotepad.name}
-                                </Box>
+                                {isEditingNotepadName ? (
+                                    <>
+                                        <Flex>
+                                            <Input
+                                                bg="white"
+                                                maxH="32px"
+                                                value={notepadName}
+                                                onChange={handleInputChange}
+                                                placeholder="メモ帳の名前を入力"
+                                            />
+                                            <IconButton
+                                                aria-label="Save"
+                                                icon={<CheckIcon />}
+                                                bg="transparent"
+                                                border="none"
+                                                ml={1}
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => {
+                                                    homeContext.handleUpdateNotepadClick(
+                                                        showingNotepad.id,
+                                                        notepadName
+                                                    );
+                                                    setIsEditingNotepadName(
+                                                        false
+                                                    );
+                                                }}
+                                                isDisabled={notepadName === ""}
+                                            />
+                                        </Flex>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Flex>
+                                            <Box
+                                                textAlign={"left"}
+                                                fontSize="xl"
+                                                fontWeight="bold"
+                                            >
+                                                {notepadName}
+                                            </Box>
+                                            <IconButton
+                                                aria-label="Edit"
+                                                icon={<EditIcon />}
+                                                bg="transparent"
+                                                border="none"
+                                                ml={1}
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() =>
+                                                    setIsEditingNotepadName(
+                                                        true
+                                                    )
+                                                }
+                                            />
+                                        </Flex>
+                                    </>
+                                )}
                             </Flex>
                             {/* SP表示 */}
                             <Box display={{ base: "block", md: "none" }}>
@@ -95,6 +167,15 @@ const Header = () => {
                                     fontSize="lg"
                                     colorScheme="blue"
                                     shadow={"md"}
+                                    onClick={
+                                        homeContext.handleSaveShowingPageClick
+                                    }
+                                    isDisabled={
+                                        homeContext.getCurrentContentText() ===
+                                            "" ||
+                                        homeContext.getCurrentContentText() ===
+                                            showingPage.written_content
+                                    }
                                 >
                                     ページを保存
                                 </Button>
