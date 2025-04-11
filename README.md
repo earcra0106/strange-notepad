@@ -19,3 +19,6 @@ Docker Desktop
 React
 Inertia
 Chakra-UI
+
+laravel-debugbar
+composer require --dev barryvdh/laravel-debugbar
