@@ -1,0 +1,65 @@
+@startuml
+entity "users" {
+    * id : ULID
+    --
+    name : string
+    email : string
+    password : string
+    email_verified_at : timestamp
+    remember_token : string
+    timestamps : timestamp
+}
+
+entity "notepads" {
+    * id : ULID
+    --
+    user_id : ULID
+    name : string
+    expected_modifier_prompt_id : ULID
+    expected_change_prompt_id : ULID
+    modifier_prompt_id : ULID
+    change_prompt_id : ULID
+    original_user_id : ULID
+    is_deleted : boolean
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "pages" {
+    * id : ULID
+    --
+    notepad_id : ULID
+    page_number : integer
+    written_content : longText
+    changed_content : longText
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "modifier_prompts" {
+    * id : ULID
+    --
+    name : text
+    prompt : text
+    is_deleted : boolean
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "change_prompts" {
+    * id : ULID
+    --
+    name : text
+    prompt : text
+    is_deleted : boolean
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+' Relationships
+users ||--o{ notepads : "has many"
+notepads ||--o{ pages : "has many"
+notepads }o--|| modifier_prompts : "belongs to"
+notepads }o--|| change_prompts : "belongs to"
+notepads }o--|| users : "original user"
+@enduml
