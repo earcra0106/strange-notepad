@@ -13,10 +13,10 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
+    /*
+     * テストデータ一式を生成する。
      */
-    public function run(): void
+    private function createTestData(): User
     {
         $testUser = User::factory()->create([
             'name' => 'test',
@@ -57,6 +57,16 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        return $testUser;
+    }
+
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        $testUser = $this->createTestData();
 
         // 追加のデータを生成
         User::factory(5)->create();

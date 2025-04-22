@@ -17,8 +17,8 @@ class ModifierPromptFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->lastName,
-            'prompt' => $this->faker->streetName,
+            'name' => '特徴のない',
+            'prompt' => 'なし',
             'is_deleted' => false,
         ];
     }
