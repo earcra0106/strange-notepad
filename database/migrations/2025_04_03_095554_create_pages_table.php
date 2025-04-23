@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('page_number');
             $table->longText('written_content')->nullable();
             $table->longText('changed_content')->nullable();
+            $table->boolean('is_changed_by_prompt')->default(false);
             $table->timestamps();
         });
     }

@@ -27,6 +27,7 @@ class PageController extends Controller
 
         $page->written_content = $newWrittenContent ?? $page->written_content;
         $page->changed_content = $newChangedContent ?? $page->changed_content;
+        $page->is_changed_by_prompt = $request->input('is_changed_by_prompt', false);
         $page->save();
 
         return response()->json($page);

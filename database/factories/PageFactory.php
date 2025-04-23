@@ -27,6 +27,7 @@ class PageFactory extends Factory
             'page_number' => $maxPageNumber + 1,
             'written_content' => $this->faker->realText(50, 2),
             'changed_content' => '',
+            'is_changed_by_prompt' => false,
         ];
     }
 }
