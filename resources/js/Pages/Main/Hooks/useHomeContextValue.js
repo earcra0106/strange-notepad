@@ -5,6 +5,11 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const [allNotepads, setAllNotepads] = useState(notepads);
     const [showingPage, setShowingPage] = useState(null);
     const [currentContentText, setCurrentContentText] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getIsLoading = () => {
+        return isLoading;
+    };
 
     const getShowingPage = () => {
         return showingPage;
@@ -157,6 +162,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     // Notepadの情報を変更するときの処理
     const handleUpdateNotepadClick = async (notepad_id, new_name = null) => {
         try {
+            setIsLoading(true);
             const response = await axios.patch("/home/notepad", {
                 notepad_id: notepad_id,
                 new_name: new_name,
@@ -172,6 +178,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                         : notepad
                 )
             );
+            setIsLoading(false);
         } catch (error) {
             console.error("メモ帳の変更に失敗しました:", error);
         }
@@ -224,6 +231,9 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
         getCurrentContentText,
         setCurrentContentText,
+
+        getIsLoading,
+        setIsLoading,
 
         getNotepadById,
         getShowingNotepad,
