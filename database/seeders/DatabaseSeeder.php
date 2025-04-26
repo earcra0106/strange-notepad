@@ -18,6 +18,20 @@ class DatabaseSeeder extends Seeder
      */
     private function createTestData(): User
     {
+        $initialExpectedModifierPrompt = ModifierPrompt::factory()->create([
+            'id' => '00000000000000000000000000',
+            'name' => 'ある特徴をもつ',
+            'prompt' => 'なし',
+            'is_deleted' => false,
+        ]);
+
+        $initialExpectedChangePrompt = ChangePrompt::factory()->create([
+            'id' => '00000000000000000000000000',
+            'name' => 'ある変更をする',
+            'prompt' => 'なし',
+            'is_deleted' => false,
+        ]);
+
         $testUser = User::factory()->create([
             'name' => 'test',
             'email' => 'test@test',
@@ -26,13 +40,15 @@ class DatabaseSeeder extends Seeder
 
         $testModifierPrompt = ModifierPrompt::factory()->create([
             'name' => 'テストの特徴をもつ',
-            'prompt' => '本文の内容によらず、冒頭に「テスト\\n」と追加してください。',
+            // 'prompt' => '本文の内容によらず、冒頭に「テスト\\n」と追加してください。',
+            'prompt' => '表現をとんでもなく誇張したり、めちゃくちゃ豪快にするなどして、テンションが超高い文にしてください。',
             'is_deleted' => false,
         ]);
 
         $testChangePrompt = ChangePrompt::factory()->create([
             'name' => 'テストの変更をする',
-            'prompt' => '本文の内容によらず、末尾に「\\nテスト」と追加してください。',
+            // 'prompt' => '本文の内容によらず、末尾に「\\nテスト」と追加してください。',
+            'prompt' => '口調をお嬢様みたいにしてください。',
             'is_deleted' => false,
         ]);
 
@@ -41,6 +57,8 @@ class DatabaseSeeder extends Seeder
             $testNotepad = Notepad::factory()->create([
                 'user_id' => $testUser->id,
                 'name' => 'test notepad ' . $i,
+                'expected_modifier_prompt_id' => $initialExpectedModifierPrompt->id,
+                'expected_change_prompt_id' => $initialExpectedChangePrompt->id,
                 'modifier_prompt_id' => $testModifierPrompt->id,
                 'change_prompt_id' => $testChangePrompt->id,
                 'original_user_id' => $testUser->id,
@@ -54,6 +72,7 @@ class DatabaseSeeder extends Seeder
                     'page_number' => $j,
                     'written_content' => 'notepad ' . $i . ' test written text on page ' . $j,
                     'changed_content' => 'notepad ' . $i . ' test changed text on page ' . $j,
+
                 ]);
             }
         }

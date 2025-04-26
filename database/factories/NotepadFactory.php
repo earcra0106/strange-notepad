@@ -24,8 +24,8 @@ class NotepadFactory extends Factory
         return [
             'user_id' => $owner,
             'name' => $this->faker->name,
-            'expected_modifier_prompt_id' => '',
-            'expected_change_prompt_id' => '',
+            'expected_modifier_prompt_id' => '00000000000000000000000000',
+            'expected_change_prompt_id' => '00000000000000000000000000',
             'modifier_prompt_id' => ModifierPrompt::query()->inRandomOrder()->value('id') ?? ModifierPrompt::factory(),
             'change_prompt_id' => ChangePrompt::query()->inRandomOrder()->value('id') ?? ChangePrompt::factory(),
             'original_user_id' => $owner,

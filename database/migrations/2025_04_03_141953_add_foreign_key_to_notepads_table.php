@@ -19,6 +19,20 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
+            $table->ulid('expected_modifier_prompt_id')->after('name')->nullable();
+            $table->foreign('expected_modifier_prompt_id')
+                ->references('id')
+                ->on('modifier_prompts')
+                ->onDelete('set null')
+                ->cascadeOnUpdate();
+
+            $table->ulid('expected_change_prompt_id')->after('expected_modifier_prompt_id')->nullable();
+            $table->foreign('expected_change_prompt_id')
+                ->references('id')
+                ->on('change_prompts')
+                ->onDelete('set null')
+                ->cascadeOnUpdate();
+
             $table->ulid('modifier_prompt_id')->after('expected_change_prompt_id')->nullable();
             $table->foreign('modifier_prompt_id')
                 ->references('id')
