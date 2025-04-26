@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Box, Text, Flex } from "@chakra-ui/react";
 import { useHomeContext } from "./Contexts/HomeContext";
-import LoadIndicator from "./LoadIndicator";
 
 const Content = () => {
     const homeContext = useHomeContext();
@@ -46,19 +45,6 @@ const Content = () => {
 
     return (
         <>
-            {homeContext.getIsLoading() && (
-                <Box
-                    w="100%"
-                    h="100%"
-                    display="flex"
-                    justify-content="center"
-                    align-items="center"
-                    bg="rgba(0, 0, 0, 0.3)"
-                    zIndex={1000}
-                >
-                    <LoadIndicator />
-                </Box>
-            )}
             <Box p={4}>
                 <Box
                     display="flex"
@@ -97,6 +83,11 @@ const Content = () => {
                                 resize="none"
                                 bg="transparent"
                                 value={homeContext.getCurrentContentText()}
+                                color={
+                                    showingPage.is_changed_by_prompt
+                                        ? "blue.500"
+                                        : "black"
+                                }
                             ></Box>
                             <Text
                                 textAlign="right"

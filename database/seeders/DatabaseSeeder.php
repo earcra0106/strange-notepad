@@ -26,13 +26,13 @@ class DatabaseSeeder extends Seeder
 
         $testModifierPrompt = ModifierPrompt::factory()->create([
             'name' => 'テストの特徴をもつ',
-            'prompt' => 'test modifier prompt',
+            'prompt' => '本文の内容によらず、冒頭に「テスト\\n」と追加してください。',
             'is_deleted' => false,
         ]);
 
         $testChangePrompt = ChangePrompt::factory()->create([
             'name' => 'テストの変更をする',
-            'prompt' => 'test change prompt',
+            'prompt' => '本文の内容によらず、末尾に「\\nテスト」と追加してください。',
             'is_deleted' => false,
         ]);
 

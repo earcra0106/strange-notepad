@@ -133,9 +133,7 @@ const Header = () => {
                                         <MenuItem
                                             isDisabled={
                                                 homeContext.getCurrentContentText() ===
-                                                    "" ||
-                                                homeContext.getCurrentContentText() ===
-                                                    showingPage.written_content
+                                                showingPage.written_content
                                             }
                                             onClick={
                                                 homeContext.handleSaveShowingPageClick
@@ -143,7 +141,18 @@ const Header = () => {
                                         >
                                             ページを保存
                                         </MenuItem>
-                                        <MenuItem>魔力で保存</MenuItem>
+                                        <MenuItem
+                                            isDisabled={
+                                                homeContext.getCurrentContentText() ===
+                                                    "" ||
+                                                showingPage.is_changed_by_prompt
+                                            }
+                                            onClick={
+                                                homeContext.handleSaveAndChangeWithPromptClick
+                                            }
+                                        >
+                                            魔法で変換
+                                        </MenuItem>
                                     </MenuList>
                                 </Menu>
                             </Box>
@@ -175,9 +184,7 @@ const Header = () => {
                                     }
                                     isDisabled={
                                         homeContext.getCurrentContentText() ===
-                                            "" ||
-                                        homeContext.getCurrentContentText() ===
-                                            showingPage.written_content
+                                        showingPage.written_content
                                     }
                                 >
                                     ページを保存
@@ -188,8 +195,16 @@ const Header = () => {
                                     fontSize="lg"
                                     colorScheme="blue"
                                     shadow={"md"}
+                                    isDisabled={
+                                        homeContext.getCurrentContentText() ===
+                                            "" ||
+                                        showingPage.is_changed_by_prompt
+                                    }
+                                    onClick={
+                                        homeContext.handleSaveAndChangeWithPromptClick
+                                    }
                                 >
-                                    魔力で保存
+                                    魔法で変換
                                 </Button>
                             </Box>
                         </>

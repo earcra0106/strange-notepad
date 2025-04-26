@@ -40,9 +40,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     };
 
     const getPageByPageNumber = (notepad_id, page_number) => {
-        console.log(
-            allNotepads.find((notepad) => notepad.id === notepad_id).pages
-        );
         return allNotepads
             .find((notepad) => notepad.id === notepad_id)
             .pages.find((page) => page.page_number === page_number);
@@ -178,17 +175,21 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                         : notepad
                 )
             );
-            setIsLoading(false);
         } catch (error) {
             console.error("メモ帳の変更に失敗しました:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleSaveShowingPageClick = async () => {
         try {
+            setIsLoading(true);
+
             const response = await axios.patch("/home/page", {
                 page_id: getShowingPage().id,
                 new_written_content: getCurrentContentText(),
+                is_changed_by_prompt: false,
             });
 
             const new_page = response.data;
@@ -196,6 +197,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             setShowingPage((prevPage) => ({
                 ...prevPage,
                 written_content: new_page.written_content,
+                is_changed_by_prompt: new_page.is_changed_by_prompt,
             }));
 
             setAllNotepads((prevNotepads) =>
@@ -209,6 +211,8 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                                 ? {
                                       ...page,
                                       written_content: new_page.written_content,
+                                      is_changed_by_prompt:
+                                          new_page.is_changed_by_prompt,
                                   }
                                 : page
                         ),
@@ -219,7 +223,107 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             console.log("ページの変更に成功しました:", new_page);
         } catch (error) {
             console.error("ページの変更に失敗しました:", error);
+        } finally {
+            setIsLoading(false);
         }
+    };
+
+    const handleSaveAndChangeWithPromptClick = async () => {
+        try {
+            if (
+                !confirm(
+                    "魔力をこめて保存しますか？\n\nメモ帳に込められたジュモンで、現在のページの内容が書き換わります。"
+                )
+            ) {
+                return;
+            }
+
+            // いったんセーブ
+            await handleSaveShowingPageClick();
+
+            setIsLoading(true);
+
+            // AIに渡すプロンプトを作成
+            const prompt =
+                "【指示】以下の【ルール】に従い、【メモ本文】を書き換えてください。\n" +
+                "【ルール】に従って書き換えた内容だけを出力してください。\n" +
+                "【メモ本文】が、【ルール】によって変えられないような内容である場合はそのまま出力してください。例：数字の羅列\n" +
+                "\n" +
+                "【ルール】\n" +
+                "1. " +
+                getModifierPromptOfNotepadByNotepadId(
+                    getShowingPage().notepad_id
+                ).prompt +
+                "\n" +
+                "2. " +
+                getChangePromptOfNotepadByNotepadId(getShowingPage().notepad_id)
+                    .prompt +
+                "\n" +
+                "\n" +
+                "【メモ本文】\n" +
+                getShowingPage().written_content;
+
+            const aiResponse = await axios.post("/api/ai/generate", { prompt });
+
+            const new_changed_content = aiResponse.data.result;
+
+            if (new_changed_content === getShowingPage().written_content) {
+                console.log("魔法が不発になりました。");
+                return;
+            }
+
+            // 変更されたページの内容を保存する
+            const saveResponse = await axios.patch("/home/page", {
+                page_id: getShowingPage().id,
+                new_changed_content: new_changed_content,
+                is_changed_by_prompt: true,
+            });
+
+            const new_page = saveResponse.data;
+
+            setShowingPage((prevPage) => ({
+                ...prevPage,
+                changed_content: new_page.changed_content,
+                is_changed_by_prompt: new_page.is_changed_by_prompt,
+            }));
+
+            setAllNotepads((prevNotepads) =>
+                prevNotepads.map((notepad) => {
+                    if (notepad.id !== new_page.notepad_id) return notepad;
+
+                    return {
+                        ...notepad,
+                        pages: notepad.pages.map((page) =>
+                            page.id === new_page.id
+                                ? {
+                                      ...page,
+                                      changed_content: new_page.changed_content,
+                                      is_changed_by_prompt:
+                                          new_page.is_changed_by_prompt,
+                                  }
+                                : page
+                        ),
+                    };
+                })
+            );
+            console.log("ページの変更に成功しました:", new_page);
+        } catch (error) {
+            console.error("ページの変更に失敗しました:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const isNotepadHasChangedPage = (notepad_id) => {
+        const notepad = allNotepads.find(
+            (notepad) => notepad.id === notepad_id
+        );
+        if (!notepad) {
+            console.error(`Notepad with ID ${notepad_id} not found.`);
+            return false;
+        }
+
+        return notepad.pages.some((page) => page.is_changed_by_prompt);
     };
 
     return {
@@ -256,6 +360,9 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         handleDeleteNotepadClick,
         handleUpdateNotepadClick,
         handleSaveShowingPageClick,
+        handleSaveAndChangeWithPromptClick,
+
+        isNotepadHasChangedPage,
     };
 };
 
