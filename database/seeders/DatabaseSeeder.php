@@ -13,10 +13,10 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
+    /*
+     * テストデータ一式を生成する。
      */
-    public function run(): void
+    private function createTestData(): User
     {
         $testUser = User::factory()->create([
             'name' => 'test',
@@ -26,13 +26,13 @@ class DatabaseSeeder extends Seeder
 
         $testModifierPrompt = ModifierPrompt::factory()->create([
             'name' => 'テストの特徴をもつ',
-            'prompt' => 'test modifier prompt',
+            'prompt' => '本文の内容によらず、冒頭に「テスト\\n」と追加してください。',
             'is_deleted' => false,
         ]);
 
         $testChangePrompt = ChangePrompt::factory()->create([
             'name' => 'テストの変更をする',
-            'prompt' => 'test change prompt',
+            'prompt' => '本文の内容によらず、末尾に「\\nテスト」と追加してください。',
             'is_deleted' => false,
         ]);
 
@@ -57,6 +57,16 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        return $testUser;
+    }
+
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        $testUser = $this->createTestData();
 
         // 追加のデータを生成
         User::factory(5)->create();

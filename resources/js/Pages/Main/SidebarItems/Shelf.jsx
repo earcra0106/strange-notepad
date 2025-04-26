@@ -55,8 +55,12 @@ const Shelf = () => {
                         mb={2}
                         bg="red.300"
                         borderRadius="md"
-                        color="white"
-                        _hover={{ shadow: "md" }}
+                        color={
+                            homeContext.isNotepadHasChangedPage(notepad.id)
+                                ? "blue.100"
+                                : "white"
+                        }
+                        _hover={{ bg: "red.300" }}
                         _active={{ bg: "red.400" }}
                         transition="all 0.2s"
                         justifyContent="flex-start"
@@ -71,6 +75,11 @@ const Shelf = () => {
                             }
                             return "none";
                         }}
+                        boxShadow={
+                            homeContext.isNotepadHasChangedPage(notepad.id)
+                                ? "0 0 10px 2px white"
+                                : "none"
+                        }
                     >
                         {notepad.name}
                     </Button>

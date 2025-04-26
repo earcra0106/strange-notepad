@@ -12,12 +12,15 @@ const Content = () => {
 
     useEffect(() => {
         if (showingPage) {
-            homeContext.setCurrentContentText(
-                showingPage.written_content || ""
-            );
-            setCharCount((showingPage.written_content || "").length);
+            const newContentText = showingPage.is_changed_by_prompt
+                ? showingPage.changed_content || ""
+                : showingPage.written_content || "";
+            homeContext.setCurrentContentText(newContentText);
+            setCharCount(newContentText.length);
         }
     }, [showingPage]);
+
+    useEffect(() => {}, [homeContext.getIsLoading()]);
 
     if (!showingPage) {
         return (
@@ -41,60 +44,67 @@ const Content = () => {
     };
 
     return (
-        <Box p={4}>
-            <Box
-                display="flex"
-                borderRadius="md"
-                boxShadow="lg"
-                w="100%"
-                h="100%"
-                bg="gray.100"
-            >
-                <Box w="40px" h="100%">
-                    {Array.from({ length: 10 }, (_, i) => (
-                        <Box
-                            key={i}
-                            bg="green.200"
-                            w="20px"
-                            h="20px"
-                            borderRadius="full"
-                            mx="auto"
-                            my={3}
-                        />
-                    ))}
-                </Box>
+        <>
+            <Box p={4}>
+                <Box
+                    display="flex"
+                    borderRadius="md"
+                    boxShadow="lg"
+                    w="100%"
+                    h="100%"
+                    bg="gray.100"
+                >
+                    <Box w="40px" h="100%">
+                        {Array.from({ length: 10 }, (_, i) => (
+                            <Box
+                                key={i}
+                                bg="green.200"
+                                w="20px"
+                                h="20px"
+                                borderRadius="full"
+                                mx="auto"
+                                my={3}
+                            />
+                        ))}
+                    </Box>
 
-                <Box flex="1" bg="gray.100" p={4}>
-                    <Flex direction="column" h="100%">
-                        <Box
-                            as="textarea"
-                            flex="1"
-                            placeholder="Type your notes here..."
-                            maxLength={maxCharCount}
-                            onChange={handleInputChange}
-                            w="100%"
-                            h="100%"
-                            border="none"
-                            outline="none"
-                            resize="none"
-                            bg="transparent"
-                            value={homeContext.getCurrentContentText()}
-                        ></Box>
-                        <Text
-                            textAlign="right"
-                            fontSize="sm"
-                            color={
-                                charCount >= maxCharCount
-                                    ? "red.500"
-                                    : "gray.500"
-                            }
-                        >
-                            {charCount} / {maxCharCount}
-                        </Text>
-                    </Flex>
+                    <Box flex="1" bg="gray.100" p={4}>
+                        <Flex direction="column" h="100%">
+                            <Box
+                                as="textarea"
+                                flex="1"
+                                placeholder="Type your notes here..."
+                                maxLength={maxCharCount}
+                                onChange={handleInputChange}
+                                w="100%"
+                                h="100%"
+                                border="none"
+                                outline="none"
+                                resize="none"
+                                bg="transparent"
+                                value={homeContext.getCurrentContentText()}
+                                color={
+                                    showingPage.is_changed_by_prompt
+                                        ? "blue.500"
+                                        : "black"
+                                }
+                            ></Box>
+                            <Text
+                                textAlign="right"
+                                fontSize="sm"
+                                color={
+                                    charCount >= maxCharCount
+                                        ? "red.500"
+                                        : "gray.500"
+                                }
+                            >
+                                {charCount} / {maxCharCount}
+                            </Text>
+                        </Flex>
+                    </Box>
                 </Box>
             </Box>
-        </Box>
+        </>
     );
 };
 

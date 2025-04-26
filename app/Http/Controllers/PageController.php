@@ -22,11 +22,20 @@ class PageController extends Controller
             return response()->json(['message' => 'Page not found'], 404);
         }
 
-        $newWrittenContent = $request->input('new_written_content');
-        $newChangedContent = $request->input('new_changed_content');
+        if ($request->has('new_written_content')) {
+            $page->written_content = $request->input('new_written_content')
+            ? $request->input('new_written_content')
+            : "";
+        }
+        if ($request->has('new_changed_content')) {
+            $page->changed_content = $request->input('new_changed_content')
+            ? $request->input('new_changed_content')
+            : "";
+        }
+        if ($request->has('is_changed_by_prompt')) {
+            $page->is_changed_by_prompt = $request->input('is_changed_by_prompt');
+        }
 
-        $page->written_content = $newWrittenContent ?? $page->written_content;
-        $page->changed_content = $newChangedContent ?? $page->changed_content;
         $page->save();
 
         return response()->json($page);

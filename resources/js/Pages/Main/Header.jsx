@@ -120,7 +120,6 @@ const Header = () => {
                                         icon={<HamburgerIcon />}
                                     />
                                     <MenuList>
-                                        <MenuItem>ジュモン</MenuItem>
                                         <MenuItem
                                             onClick={() => {
                                                 homeContext.handleDeleteNotepadClick(
@@ -131,21 +130,34 @@ const Header = () => {
                                         >
                                             メモ帳を削除
                                         </MenuItem>
-                                        <MenuItem>ページを保存</MenuItem>
+                                        <MenuItem
+                                            isDisabled={
+                                                homeContext.getCurrentContentText() ===
+                                                showingPage.written_content
+                                            }
+                                            onClick={
+                                                homeContext.handleSaveShowingPageClick
+                                            }
+                                        >
+                                            ページを保存
+                                        </MenuItem>
+                                        <MenuItem
+                                            isDisabled={
+                                                homeContext.getCurrentContentText() ===
+                                                    "" ||
+                                                showingPage.is_changed_by_prompt
+                                            }
+                                            onClick={
+                                                homeContext.handleSaveAndChangeWithPromptClick
+                                            }
+                                        >
+                                            魔法で変換
+                                        </MenuItem>
                                     </MenuList>
                                 </Menu>
                             </Box>
                             {/* PC表示 */}
                             <Box display={{ base: "none", md: "block" }}>
-                                <Button
-                                    h="100%"
-                                    mr={2}
-                                    minW="120px"
-                                    fontSize="lg"
-                                    shadow={"md"}
-                                >
-                                    ジュモン
-                                </Button>
                                 <Button
                                     h="100%"
                                     mr={2}
@@ -163,21 +175,36 @@ const Header = () => {
                                 </Button>
                                 <Button
                                     h="100%"
+                                    mr={2}
                                     minW="120px"
                                     fontSize="lg"
-                                    colorScheme="blue"
                                     shadow={"md"}
                                     onClick={
                                         homeContext.handleSaveShowingPageClick
                                     }
                                     isDisabled={
                                         homeContext.getCurrentContentText() ===
-                                            "" ||
-                                        homeContext.getCurrentContentText() ===
-                                            showingPage.written_content
+                                        showingPage.written_content
                                     }
                                 >
                                     ページを保存
+                                </Button>
+                                <Button
+                                    h="100%"
+                                    minW="120px"
+                                    fontSize="lg"
+                                    colorScheme="blue"
+                                    shadow={"md"}
+                                    isDisabled={
+                                        homeContext.getCurrentContentText() ===
+                                            "" ||
+                                        showingPage.is_changed_by_prompt
+                                    }
+                                    onClick={
+                                        homeContext.handleSaveAndChangeWithPromptClick
+                                    }
+                                >
+                                    魔法で変換
                                 </Button>
                             </Box>
                         </>

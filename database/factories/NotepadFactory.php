@@ -24,10 +24,10 @@ class NotepadFactory extends Factory
         return [
             'user_id' => $owner,
             'name' => $this->faker->name,
-            'expected_modifier_prompt_id' => strtolower(Str::ulid()),
-            'expected_change_prompt_id' => strtolower(Str::ulid()),
-            'modifier_prompt_id' => ModifierPrompt::factory(),
-            'change_prompt_id' => ChangePrompt::factory(),
+            'expected_modifier_prompt_id' => '',
+            'expected_change_prompt_id' => '',
+            'modifier_prompt_id' => ModifierPrompt::query()->inRandomOrder()->value('id') ?? ModifierPrompt::factory(),
+            'change_prompt_id' => ChangePrompt::query()->inRandomOrder()->value('id') ?? ChangePrompt::factory(),
             'original_user_id' => $owner,
             'is_deleted' => false,
         ];

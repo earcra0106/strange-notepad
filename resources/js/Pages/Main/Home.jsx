@@ -1,5 +1,4 @@
 import React from "react";
-import { createContext, useContext, useState, useEffect } from "react";
 import { Box, Flex, Grid } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
@@ -7,14 +6,18 @@ import Content from "./Content";
 import Footer from "./Footer";
 import { HomeContext } from "./Contexts/HomeContext";
 import useHomeContextValue from "./Hooks/useHomeContextValue";
+import LoadOverlay from "./LoadOverlay";
 
 const Home = ({ notepads }) => {
     const contextValue = useHomeContextValue(notepads);
+
+    const { getIsLoading } = contextValue;
 
     // JSX
     return (
         <>
             <HomeContext.Provider value={contextValue}>
+                {getIsLoading() && <LoadOverlay />}
                 <Box w="100%">
                     <Grid minH="100vh">
                         <Flex>
