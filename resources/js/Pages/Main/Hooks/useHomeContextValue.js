@@ -263,6 +263,8 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                 "【メモ本文】\n" +
                 getShowingPage().written_content;
 
+            console.log("プロンプト:", prompt);
+
             const aiResponse = await axios.post("/api/ai/generate", { prompt });
 
             const new_changed_content = aiResponse.data.result;
