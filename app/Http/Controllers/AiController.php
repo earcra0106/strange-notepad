@@ -12,7 +12,7 @@ class AiController extends Controller
         $user_input = $request->input('prompt');
 
         $response = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-4o-mini',
             'messages' => [
                 ['role' => 'system', 'content' => 'あなたは親切なアシスタントです。'],
                 ['role' => 'user', 'content' => $user_input],
