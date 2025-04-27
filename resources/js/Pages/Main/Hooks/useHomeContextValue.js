@@ -238,9 +238,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                 return;
             }
 
-            // いったんセーブ
-            await handleSaveShowingPageClick();
-
             setIsLoading(true);
 
             // AIに渡すプロンプトを作成
@@ -261,7 +258,9 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                 "\n" +
                 "\n" +
                 "【メモ本文】\n" +
-                getShowingPage().written_content;
+                getCurrentContentText();
+
+            console.log("プロンプト:", prompt);
 
             console.log("プロンプト:", prompt);
 
@@ -277,6 +276,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             // 変更されたページの内容を保存する
             const saveResponse = await axios.patch("/home/page", {
                 page_id: getShowingPage().id,
+                new_written_content: getCurrentContentText(),
                 new_changed_content: new_changed_content,
                 is_changed_by_prompt: true,
             });
@@ -285,6 +285,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             setShowingPage((prevPage) => ({
                 ...prevPage,
+                written_content: new_page.written_content,
                 changed_content: new_page.changed_content,
                 is_changed_by_prompt: new_page.is_changed_by_prompt,
             }));
@@ -299,6 +300,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                             page.id === new_page.id
                                 ? {
                                       ...page,
+                                      written_content: new_page.written_content,
                                       changed_content: new_page.changed_content,
                                       is_changed_by_prompt:
                                           new_page.is_changed_by_prompt,
