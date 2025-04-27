@@ -262,8 +262,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             console.log("プロンプト:", prompt);
 
-            console.log("プロンプト:", prompt);
-
             const aiResponse = await axios.post("/api/ai/generate", { prompt });
 
             const new_changed_content = aiResponse.data.result;
