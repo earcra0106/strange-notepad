@@ -18,14 +18,14 @@ class PageFactory extends Factory
      */
     public function definition(): array
     {
-        $notepadId = Notepad::query()->inRandomOrder()->value('id') ?? Notepad::factory();
+        $notepadId = Notepad::query()->inRandomOrder()->value('id') ?? Notepad::factory()->create()->id;
 
         $maxPageNumber = Page::where('notepad_id', $notepadId)->max('page_number') ?? 0;
 
         return [
             'notepad_id' => $notepadId,
             'page_number' => $maxPageNumber + 1,
-            'written_content' => $this->faker->realText(50, 2),
+            'written_content' => '',
             'changed_content' => '',
             'is_changed_by_prompt' => false,
         ];
