@@ -21,6 +21,7 @@ const Header = () => {
 
     const [isEditingNotepadName, setIsEditingNotepadName] = useState(false);
     const [notepadName, setNotepadName] = useState("");
+
     const [expectedModifierPrompt, setExpectedModifierPrompt] = useState("");
     const [expectedChangePrompt, setExpectedChangePrompt] = useState("");
 
@@ -28,8 +29,10 @@ const Header = () => {
         if (showingNotepad) {
             setIsEditingNotepadName(false);
             setNotepadName(showingNotepad.name);
-            setExpectedModifierPrompt(showingNotepad.expected_modifier_prompt);
-            setExpectedChangePrompt(showingNotepad.expected_change_prompt);
+            // setExpectedModifierPrompt(showingNotepad.expected_modifier_prompt);
+            // setExpectedChangePrompt(showingNotepad.expected_change_prompt);
+            setExpectedModifierPrompt(showingNotepad.modifier_prompt);
+            setExpectedChangePrompt(showingNotepad.change_prompt);
         }
     }, [showingNotepad]);
 
