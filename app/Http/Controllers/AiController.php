@@ -9,12 +9,13 @@ class AiController extends Controller
 {
     public function generate(Request $request)
     {
+        $user_rule = $request->input('rule');
         $user_input = $request->input('prompt');
 
         $response = OpenAI::chat()->create([
             'model' => 'gpt-4o-mini',
             'messages' => [
-                ['role' => 'system', 'content' => 'あなたは親切なアシスタントです。'],
+                ['role' => 'system', 'content' => $user_rule ?? 'あなたは親切なアシスタントです。'],
                 ['role' => 'user', 'content' => $user_input],
             ],
         ]);
