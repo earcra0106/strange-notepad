@@ -30,33 +30,9 @@ class NotepadController extends Controller
 
     public function store(Request $request)
     {
-        // $initialExpectedModifierPrompt = ModifierPrompt::query()
-        //     ->orderBy('id', 'asc')
-        //     ->first();
-
-        // $initialExpectedChangePrompt = ChangePrompt::query()
-        //     ->orderBy('id', 'asc')
-        //     ->first();
-
-        // $modifierPrompt = ModifierPrompt::query()
-        //     ->where('id', '!=', $initialExpectedModifierPrompt->id)
-        //     ->where('is_deleted', false)
-        //     ->inRandomOrder()
-        //     ->first();
-
-        // $changePrompt = ChangePrompt::query()
-        //     ->where('id', '!=', $initialExpectedChangePrompt->id)
-        //     ->where('is_deleted', false)
-        //     ->inRandomOrder()
-        //     ->first();
-
         $notepad = Notepad::factory()->create([
             'user_id' => auth()->id(),
             'name' => '未知のメモ帳',
-            // 'expected_modifier_prompt_id' => $initialExpectedModifierPrompt->id,
-            // 'expected_change_prompt_id' => $initialExpectedChangePrompt->id,
-            // 'modifier_prompt_id' => $modifierPrompt->id,
-            // 'change_prompt_id' => $changePrompt->id,
             'original_user_id' => auth()->id(),
             'is_deleted' => false,
         ]);

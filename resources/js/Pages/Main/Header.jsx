@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import { useState, useEffect } from "react";
 import {
     Box,
@@ -10,6 +10,7 @@ import {
     MenuList,
     MenuItem,
     Input,
+    Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import { useHomeContext } from "./Contexts/HomeContext";
@@ -21,20 +22,52 @@ const Header = () => {
 
     const [isEditingNotepadName, setIsEditingNotepadName] = useState(false);
     const [notepadName, setNotepadName] = useState("");
-
-    const [expectedModifierPrompt, setExpectedModifierPrompt] = useState("");
-    const [expectedChangePrompt, setExpectedChangePrompt] = useState("");
+    const [
+        expectedModifierPromptOfShowingNotepad,
+        setExpectedModifierPromptOfShowingNotepad,
+    ] = useState("");
+    const [
+        expectedChangePromptOfShowingNotepad,
+        setExpectedChangePromptOfShowingNotepad,
+    ] = useState("");
+    const [isModifierPromptExplained, setIsModifierPromptExplained] =
+        useState(false);
+    const [isChangePromptExplained, setIsChangePromptExplained] =
+        useState(false);
 
     useEffect(() => {
         if (showingNotepad) {
             setIsEditingNotepadName(false);
             setNotepadName(showingNotepad.name);
-            // setExpectedModifierPrompt(showingNotepad.expected_modifier_prompt);
-            // setExpectedChangePrompt(showingNotepad.expected_change_prompt);
-            setExpectedModifierPrompt(showingNotepad.modifier_prompt);
-            setExpectedChangePrompt(showingNotepad.change_prompt);
+            setExpectedModifierPromptOfShowingNotepad(
+                homeContext.getExpectedModifierPromptByNotepadId(
+                    showingNotepad.id
+                )
+            );
+            setExpectedChangePromptOfShowingNotepad(
+                homeContext.getExpectedChangePromptByNotepadId(
+                    showingNotepad.id
+                )
+            );
         }
     }, [showingNotepad]);
+
+    useEffect(() => {
+        if (showingNotepad) {
+            setIsModifierPromptExplained(
+                expectedModifierPromptOfShowingNotepad.id ===
+                    homeContext.getModifierPromptByNotepadId(showingNotepad.id)
+                        .id
+            );
+            setIsChangePromptExplained(
+                expectedChangePromptOfShowingNotepad.id ===
+                    homeContext.getChangePromptByNotepadId(showingNotepad.id).id
+            );
+        }
+    }, [
+        expectedModifierPromptOfShowingNotepad,
+        expectedChangePromptOfShowingNotepad,
+    ]);
 
     const handleInputChange = (e) => {
         setNotepadName(e.target.value);
@@ -48,12 +81,32 @@ const Header = () => {
                         <>
                             <Flex direction={"column"}>
                                 <Box fontSize="md">
-                                    {expectedModifierPrompt
-                                        ? expectedModifierPrompt.name
-                                        : "ある特徴をもつ"}{" "}
-                                    {expectedChangePrompt
-                                        ? expectedChangePrompt.name
-                                        : "何かが起こる"}
+                                    <Text
+                                        as={"span"}
+                                        color={
+                                            isModifierPromptExplained
+                                                ? "green.500"
+                                                : ""
+                                        }
+                                    >
+                                        {expectedModifierPromptOfShowingNotepad
+                                            ? expectedModifierPromptOfShowingNotepad.name
+                                            : "ある特徴をもつ"}
+                                        {!isModifierPromptExplained ? "?" : ""}
+                                    </Text>{" "}
+                                    <Text
+                                        as={"span"}
+                                        color={
+                                            isChangePromptExplained
+                                                ? "green.500"
+                                                : ""
+                                        }
+                                    >
+                                        {expectedChangePromptOfShowingNotepad
+                                            ? expectedChangePromptOfShowingNotepad.name
+                                            : "何かの変更をする"}
+                                        {!isChangePromptExplained ? "?" : ""}
+                                    </Text>
                                 </Box>
                                 {isEditingNotepadName ? (
                                     <>
@@ -124,6 +177,14 @@ const Header = () => {
                                     />
                                     <MenuList>
                                         <MenuItem
+                                            onClick={
+                                                homeContext.onOpenDetectPromptModal
+                                            }
+                                            color="purple.500"
+                                        >
+                                            ジュモン
+                                        </MenuItem>
+                                        <MenuItem
                                             onClick={() => {
                                                 homeContext.handleDeleteNotepadClick(
                                                     showingNotepad.id
@@ -161,6 +222,19 @@ const Header = () => {
                             </Box>
                             {/* PC表示 */}
                             <Box display={{ base: "none", md: "block" }}>
+                                <Button
+                                    h="100%"
+                                    mr={2}
+                                    minW="120px"
+                                    fontSize="lg"
+                                    shadow={"md"}
+                                    colorScheme="purple"
+                                    onClick={
+                                        homeContext.onOpenDetectPromptModal
+                                    }
+                                >
+                                    ジュモン
+                                </Button>
                                 <Button
                                     h="100%"
                                     mr={2}

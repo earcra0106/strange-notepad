@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Grid } from "@chakra-ui/react";
+import { Box, Flex, Grid, Select } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import Content from "./Content";
@@ -7,9 +7,15 @@ import Footer from "./Footer";
 import { HomeContext } from "./Contexts/HomeContext";
 import useHomeContextValue from "./Hooks/useHomeContextValue";
 import LoadOverlay from "./LoadOverlay";
+import ModalTemplete from "./ModalTemplete";
+import DetectPromptModal from "./DetectPromptModal";
 
-const Home = ({ notepads }) => {
-    const contextValue = useHomeContextValue(notepads);
+const Home = ({ notepads, modifierPrompts, changePrompts }) => {
+    const contextValue = useHomeContextValue(
+        notepads,
+        modifierPrompts,
+        changePrompts
+    );
 
     const { getIsLoading } = contextValue;
 
@@ -42,6 +48,18 @@ const Home = ({ notepads }) => {
                         </Flex>
                     </Grid>
                 </Box>
+                {!contextValue.getShowingNotepad() ? (
+                    <ModalTemplete
+                        type="info"
+                        isOpen={contextValue.isDetectPromptModalOpen}
+                        onClose={contextValue.onCloseDetectPromptModal}
+                        titleComponent="ジュモンの推測"
+                        bodyComponent="メモ帳が選択されていません。"
+                        closeButtonText="キャンセル"
+                    />
+                ) : (
+                    <DetectPromptModal />
+                )}
             </HomeContext.Provider>
         </>
     );
