@@ -146,8 +146,8 @@ class DatabaseSeeder extends Seeder
                 'prompt' => '本文をタメ口にしてください。',
             ],
             [
-                'name' => 'お嬢様言葉にする',
-                'prompt' => '本文をお嬢様言葉にしてください。',
+                'name' => '英語にする',
+                'prompt' => '本文を英語に翻訳してください。',
             ],
             [
                 'name' => '子供っぽい口調にする',
