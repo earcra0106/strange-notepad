@@ -38,6 +38,4 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/home', [NotepadController::class, 'index'])->name('notepad.index');
 
-Route::get('/chatbot', [ChatController::class, 'index'])->name('chatbot.index');
-
 require __DIR__.'/auth.php';

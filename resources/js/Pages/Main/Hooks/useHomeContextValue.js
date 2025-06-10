@@ -267,27 +267,29 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             setIsLoading(true);
 
-            // AIに渡すプロンプトを作成
-            const prompt =
-                "【指示】以下の【ルール】に従い、【メモ本文】を書き換えてください。\n" +
-                "【ルール】に従って書き換えた内容だけを出力してください。\n" +
-                "【メモ本文】が、【ルール】によって変えられないような内容である場合はそのまま出力してください。例：数字の羅列\n" +
-                "\n" +
+            console.log(
                 "【ルール】\n" +
-                "1. " +
-                getModifierPromptByNotepadId(getShowingPage().notepad_id)
-                    .prompt +
-                "\n" +
-                "2. " +
-                getChangePromptByNotepadId(getShowingPage().notepad_id).prompt +
-                "\n" +
-                "\n" +
-                "【メモ本文】\n" +
-                getCurrentContentText();
+                    "1. " +
+                    getModifierPromptByNotepadId(getShowingPage().notepad_id)
+                        .prompt +
+                    "\n" +
+                    "2. " +
+                    getChangePromptByNotepadId(getShowingPage().notepad_id)
+                        .prompt +
+                    "\n" +
+                    "【メモ本文】\n" +
+                    getCurrentContentText()
+            );
 
-            console.log("プロンプト:", prompt);
-
-            const aiResponse = await axios.post("/api/ai/generate", { prompt });
+            const aiResponse = await axios.post("api/ai/change-note-content", {
+                content: getCurrentContentText(),
+                modifier_prompt: getModifierPromptByNotepadId(
+                    getShowingPage().notepad_id
+                ).prompt,
+                change_prompt: getChangePromptByNotepadId(
+                    getShowingPage().notepad_id
+                ).prompt,
+            });
 
             const new_changed_content = aiResponse.data.result;
 
