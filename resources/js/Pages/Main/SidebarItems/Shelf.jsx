@@ -13,14 +13,11 @@ const Shelf = () => {
     return (
         <Flex p={4} direction="column" h="100%">
             <Button
-                onClick={homeContext.handleNewNotepadClick}
-                w="100%"
-                mb={2}
-                colorScheme="blue"
-                shadow={"md"}
                 leftIcon={<AddIcon />}
-                whiteSpace="nowrap"
-                overflow="hidden"
+                variant={"roundedPurple"}
+                fontSize="lg"
+                mb={4}
+                onClick={homeContext.handleNewNotepadClick}
             >
                 新規メモ帳
             </Button>
@@ -28,7 +25,7 @@ const Shelf = () => {
                 flex="1"
                 overflowY="auto"
                 p={2}
-                bg="red.200"
+                bg="gray.700"
                 borderRadius="md"
                 css={{
                     "&::-webkit-scrollbar": {
@@ -36,11 +33,11 @@ const Shelf = () => {
                         width: "8px",
                     },
                     "&::-webkit-scrollbar-thumb": {
-                        background: "#F56565", // 柔らかい赤
+                        background: "#4A5568",
                         borderRadius: "4px",
                     },
                     "&::-webkit-scrollbar-thumb:hover": {
-                        background: "#E53E3E", // 少し濃い赤
+                        background: "#718096",
                     },
                 }}
             >
@@ -53,15 +50,15 @@ const Shelf = () => {
                         key={i}
                         p={2}
                         mb={2}
-                        bg="red.300"
-                        borderRadius="md"
+                        bg="gray.500"
+                        borderRadius="sm"
                         color={
                             homeContext.isNotepadHasChangedPage(notepad.id)
                                 ? "blue.100"
                                 : "white"
                         }
-                        _hover={{ bg: "red.300" }}
-                        _active={{ bg: "red.400" }}
+                        _hover={{ bg: "gray.600" }}
+                        _active={{ bg: "gray.700" }}
                         transition="all 0.2s"
                         justifyContent="flex-start"
                         whiteSpace="nowrap"

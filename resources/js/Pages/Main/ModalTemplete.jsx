@@ -9,6 +9,7 @@ import {
     ModalFooter,
     ModalCloseButton,
 } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 const ModalTemplete = ({
     type = "info",
@@ -24,37 +25,43 @@ const ModalTemplete = ({
         <>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent>
+                <ModalContent borderRadius="2xl">
                     <ModalHeader>{titleComponent}</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>{bodyComponent}</ModalBody>
 
                     <ModalFooter>
-                        {type === "confirm" && (
+                        <Flex gap={2} justifyContent="flex-end">
+                            {type === "confirm" && (
+                                <Button
+                                    borderRadius="full"
+                                    colorScheme="blue"
+                                    onClick={() => {
+                                        onConfirm();
+                                    }}
+                                >
+                                    {mainButtonText}
+                                </Button>
+                            )}
+                            {type === "delete" && (
+                                <Button
+                                    borderRadius="full"
+                                    colorScheme="red"
+                                    onClick={() => {
+                                        onConfirm();
+                                    }}
+                                >
+                                    {mainButtonText}
+                                </Button>
+                            )}
                             <Button
-                                colorScheme="blue"
-                                mr={3}
-                                onClick={() => {
-                                    onConfirm();
-                                }}
+                                borderRadius="full"
+                                colorScheme="gray"
+                                onClick={onClose}
                             >
-                                {mainButtonText}
+                                {closeButtonText}
                             </Button>
-                        )}
-                        {type === "delete" && (
-                            <Button
-                                colorScheme="red"
-                                mr={3}
-                                onClick={() => {
-                                    onConfirm();
-                                }}
-                            >
-                                {mainButtonText}
-                            </Button>
-                        )}
-                        <Button colorScheme="gray" mr={3} onClick={onClose}>
-                            {closeButtonText}
-                        </Button>
+                        </Flex>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

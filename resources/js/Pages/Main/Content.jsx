@@ -51,14 +51,15 @@ const Content = () => {
                     borderRadius="md"
                     boxShadow="lg"
                     w="100%"
+                    maxW={"800px"}
                     h="100%"
                     bg="gray.100"
                 >
                     <Box w="40px" h="100%">
-                        {Array.from({ length: 10 }, (_, i) => (
+                        {Array.from({ length: 13 }, (_, i) => (
                             <Box
                                 key={i}
-                                bg="green.200"
+                                bg="gray.700"
                                 w="20px"
                                 h="20px"
                                 borderRadius="full"
@@ -68,7 +69,7 @@ const Content = () => {
                         ))}
                     </Box>
 
-                    <Box flex="1" bg="gray.100" p={4}>
+                    <Box flex="1" bg="gray.100" p={4} borderRadius="md">
                         <Flex direction="column" h="100%">
                             <Box
                                 as="textarea"
@@ -90,6 +91,7 @@ const Content = () => {
                                 }
                             ></Box>
                             <Text
+                                mt={2}
                                 textAlign="right"
                                 fontSize="sm"
                                 color={

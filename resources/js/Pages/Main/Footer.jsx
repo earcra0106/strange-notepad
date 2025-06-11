@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Box, Flex, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { useHomeContext } from "./Contexts/HomeContext";
+import NotepadButtons from "./NotepadButtons.jsx";
 
 const Footer = () => {
     const homeContext = useHomeContext();
@@ -24,18 +25,17 @@ const Footer = () => {
 
     return (
         <>
-            <Box p={4} h="100%">
+            <Box p={8} h="100%">
                 <Flex h="100%">
-                    <Box flex={1}></Box>
-                    <Box w="30%">
+                    <Box w="20%">
                         <Flex
+                            minW="300px"
                             justifyContent="space-between"
                             alignItems="center"
                         >
                             <IconButton
+                                variant="roundedWhite"
                                 icon={<ChevronLeftIcon />}
-                                colorScheme="blue"
-                                shadow={"md"}
                                 onClick={() => {
                                     homeContext.handlePageChange(
                                         showingPage.notepad_id,
@@ -48,9 +48,8 @@ const Footer = () => {
                                 ページ {currentPageNumber} / {totalPageCount}
                             </Box>
                             <IconButton
+                                variant="roundedWhite"
                                 icon={<ChevronRightIcon />}
-                                colorScheme="blue"
-                                shadow={"md"}
                                 onClick={() => {
                                     homeContext.handlePageChange(
                                         showingPage.notepad_id,
@@ -61,6 +60,11 @@ const Footer = () => {
                                     showingPage.page_number >= totalPageCount
                                 }
                             />
+                        </Flex>
+                    </Box>
+                    <Box flex={1}>
+                        <Flex justifyContent="flex-end" h="100%">
+                            <NotepadButtons forMobile={false} />
                         </Flex>
                     </Box>
                 </Flex>

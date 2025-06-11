@@ -22,3 +22,18 @@ Chakra-UI
 
 laravel-debugbar
 composer require --dev barryvdh/laravel-debugbar
+
+### Laravel Sail でキャッシュをクリアする方法
+
+以下のコマンドを実行します:
+
+```bash
+sail artisan cache:clear
+sail artisan config:clear
+sail artisan route:clear
+sail artisan view:clear
+```
+
+必要に応じて各種キャッシュをクリアしてください。
+
+npm install react-icons

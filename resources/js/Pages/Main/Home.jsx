@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Grid, Select } from "@chakra-ui/react";
+import { Box, Flex, Grid, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import Content from "./Content";
@@ -7,8 +7,8 @@ import Footer from "./Footer";
 import { HomeContext } from "./Contexts/HomeContext";
 import useHomeContextValue from "./Hooks/useHomeContextValue";
 import LoadOverlay from "./LoadOverlay";
-import ModalTemplete from "./ModalTemplete";
 import DetectPromptModal from "./DetectPromptModal";
+import theme from "./Theme/Theme";
 
 const Home = ({ notepads, modifierPrompts, changePrompts }) => {
     const contextValue = useHomeContextValue(
@@ -21,47 +21,41 @@ const Home = ({ notepads, modifierPrompts, changePrompts }) => {
 
     // JSX
     return (
-        <>
+        <ChakraProvider theme={theme}>
             <HomeContext.Provider value={contextValue}>
                 {getIsLoading() && <LoadOverlay />}
-                <Box w="100%">
-                    <Grid minH="100vh">
+                <Box w="100%" h="100vh" bg="gray.800" color="white">
+                    <Grid h="100%">
                         <Flex>
                             {/* Sidebar */}
-                            <Box w="25%" bg="red.100">
+                            <Box
+                                w="240px"
+                                bg="gray.900"
+                                borderRight={"1px solid"}
+                                borderColor="gray.700"
+                            >
                                 <Sidebar />
                             </Box>
-                            <Flex direction="column" w="75%">
+                            <Flex direction="column" flex="1">
                                 {/* Header */}
-                                <Box h="20%" bg="blue.100">
+                                <Box h="100px">
                                     <Header />
                                 </Box>
                                 {/* Content */}
-                                <Box flex="1" bg="green.100">
+                                <Box flex="1">
                                     <Content />
                                 </Box>
                                 {/* Footer */}
-                                <Box h="15%" bg="yellow.100">
+                                <Box h="120px" bg="gray.700">
                                     <Footer />
                                 </Box>
                             </Flex>
                         </Flex>
                     </Grid>
                 </Box>
-                {!contextValue.getShowingNotepad() ? (
-                    <ModalTemplete
-                        type="info"
-                        isOpen={contextValue.isDetectPromptModalOpen}
-                        onClose={contextValue.onCloseDetectPromptModal}
-                        titleComponent="ジュモンの推測"
-                        bodyComponent="メモ帳が選択されていません。"
-                        closeButtonText="キャンセル"
-                    />
-                ) : (
-                    <DetectPromptModal />
-                )}
+                {contextValue.getShowingNotepad() && <DetectPromptModal />}
             </HomeContext.Provider>
-        </>
+        </ChakraProvider>
     );
 };
 

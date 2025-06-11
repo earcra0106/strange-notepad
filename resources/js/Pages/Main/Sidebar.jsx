@@ -37,20 +37,29 @@ const Sidebar = () => {
                                                 ml={3}
                                                 flex={1}
                                                 textAlign="left"
+                                                color="black"
                                             >
                                                 {auth.user.name}
                                             </Box>
                                         </Flex>
                                     </Box>
                                 </MenuButton>
-                                <MenuList>
+                                <MenuList
+                                    bg="gray.800"
+                                    color="white"
+                                    borderColor="gray.600"
+                                >
                                     <MenuItem
-                                        as="a"
+                                        color="white"
+                                        bg="gray.800"
+                                        as={Link}
                                         href={route("profile.edit")}
                                     >
                                         ユーザ情報
                                     </MenuItem>
                                     <MenuItem
+                                        color="red"
+                                        bg="gray.800"
                                         as={Link}
                                         href={route("logout")}
                                         method="post"
@@ -63,12 +72,20 @@ const Sidebar = () => {
                             <>
                                 <Flex justify="space-around">
                                     <Link href={route("login")}>
-                                        <Box p={4} textAlign="center">
+                                        <Box
+                                            p={4}
+                                            textAlign="center"
+                                            color="black"
+                                        >
                                             ログイン
                                         </Box>
                                     </Link>
                                     <Link href={route("register")}>
-                                        <Box p={4} textAlign="center">
+                                        <Box
+                                            p={4}
+                                            textAlign="center"
+                                            color="black"
+                                        >
                                             ユーザ登録
                                         </Box>
                                     </Link>

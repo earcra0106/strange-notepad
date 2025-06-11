@@ -30,6 +30,7 @@ const DetectPromptModal = () => {
             このメモ帳のジュモンは...?
             <Flex gap={4} mt={4}>
                 <Select
+                    borderRadius={"2xl"}
                     defaultValue={selectedExpectedModifierPromptId}
                     onChange={(e) => {
                         setSelectedExpectedModifierPromptId(e.target.value);
@@ -42,6 +43,7 @@ const DetectPromptModal = () => {
                     ))}
                 </Select>
                 <Select
+                    borderRadius={"2xl"}
                     defaultValue={selectedExpectedChangePromptId}
                     onChange={(e) => {
                         setSelectedExpectedChangePromptId(e.target.value);

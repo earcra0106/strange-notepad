@@ -1,19 +1,9 @@
-import React, { use } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
-import {
-    Box,
-    Flex,
-    Button,
-    IconButton,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    Input,
-    Text,
-} from "@chakra-ui/react";
-import { HamburgerIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
+import { Box, Flex, IconButton, Input, Text } from "@chakra-ui/react";
 import { useHomeContext } from "./Contexts/HomeContext";
+import { EditIcon, CheckIcon } from "@chakra-ui/icons";
+import NotepadButtons from "./NotepadButtons.jsx";
 
 const Header = () => {
     const homeContext = useHomeContext();
@@ -76,219 +66,108 @@ const Header = () => {
     return (
         <>
             <Box p={4} h="100%">
-                <Flex h="100%" justify="space-between">
-                    {showingNotepad ? (
-                        <>
-                            <Flex direction={"column"}>
+                {showingNotepad ? (
+                    <>
+                        <Flex>
+                            <Flex direction={"column"} p={4}>
                                 <Box fontSize="md">
                                     <Text
                                         as={"span"}
                                         color={
                                             isModifierPromptExplained
-                                                ? "green.500"
+                                                ? "green.400"
                                                 : ""
                                         }
                                     >
-                                        {expectedModifierPromptOfShowingNotepad
-                                            ? expectedModifierPromptOfShowingNotepad.name
-                                            : "ある特徴をもつ"}
-                                        {!isModifierPromptExplained ? "?" : ""}
+                                        {expectedModifierPromptOfShowingNotepad &&
+                                            expectedModifierPromptOfShowingNotepad.name}
                                     </Text>{" "}
                                     <Text
                                         as={"span"}
                                         color={
                                             isChangePromptExplained
-                                                ? "green.500"
+                                                ? "green.400"
                                                 : ""
                                         }
                                     >
-                                        {expectedChangePromptOfShowingNotepad
-                                            ? expectedChangePromptOfShowingNotepad.name
-                                            : "何かの変更をする"}
-                                        {!isChangePromptExplained ? "?" : ""}
+                                        {expectedChangePromptOfShowingNotepad &&
+                                            expectedChangePromptOfShowingNotepad.name}
                                     </Text>
                                 </Box>
                                 {isEditingNotepadName ? (
-                                    <>
-                                        <Flex>
-                                            <Input
-                                                bg="white"
-                                                maxH="32px"
-                                                value={notepadName}
-                                                onChange={handleInputChange}
-                                                placeholder="メモ帳の名前を入力"
-                                            />
-                                            <IconButton
-                                                aria-label="Save"
-                                                icon={<CheckIcon />}
-                                                bg="transparent"
-                                                border="none"
-                                                ml={1}
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => {
-                                                    homeContext.handleUpdateNotepadClick(
-                                                        showingNotepad.id,
-                                                        notepadName
-                                                    );
-                                                    setIsEditingNotepadName(
-                                                        false
-                                                    );
-                                                }}
-                                                isDisabled={notepadName === ""}
-                                            />
-                                        </Flex>
-                                    </>
+                                    <Flex>
+                                        <Input
+                                            bg="white"
+                                            color="black"
+                                            maxH="32px"
+                                            maxLength={30}
+                                            value={notepadName}
+                                            onChange={handleInputChange}
+                                            placeholder="メモ帳の名前を入力"
+                                        />
+                                        <IconButton
+                                            icon={<CheckIcon />}
+                                            borderRadius="full"
+                                            bg="transparent"
+                                            color="white"
+                                            border="none"
+                                            ml={1}
+                                            variant="outline"
+                                            size="sm"
+                                            _hover={{ bg: "gray.600" }}
+                                            _disabled={{
+                                                color: "gray.400",
+                                                cursor: "not-allowed",
+                                                _hover: {
+                                                    bg: "transparent",
+                                                },
+                                            }}
+                                            onClick={() => {
+                                                homeContext.handleUpdateNotepadClick(
+                                                    showingNotepad.id,
+                                                    notepadName
+                                                );
+                                                setIsEditingNotepadName(false);
+                                            }}
+                                            isDisabled={notepadName === ""}
+                                        />
+                                    </Flex>
                                 ) : (
-                                    <>
-                                        <Flex>
-                                            <Box
-                                                textAlign={"left"}
-                                                fontSize="xl"
-                                                fontWeight="bold"
-                                            >
-                                                {notepadName}
-                                            </Box>
-                                            <IconButton
-                                                aria-label="Edit"
-                                                icon={<EditIcon />}
-                                                bg="transparent"
-                                                border="none"
-                                                ml={1}
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() =>
-                                                    setIsEditingNotepadName(
-                                                        true
-                                                    )
-                                                }
-                                            />
-                                        </Flex>
-                                    </>
+                                    <Flex>
+                                        <Box
+                                            textAlign={"left"}
+                                            fontSize="xl"
+                                            fontWeight="bold"
+                                        >
+                                            {notepadName}
+                                        </Box>
+                                        <IconButton
+                                            icon={<EditIcon />}
+                                            borderRadius="full"
+                                            color="white"
+                                            bg="transparent"
+                                            border="none"
+                                            ml={1}
+                                            variant="outline"
+                                            size="sm"
+                                            _hover={{ bg: "gray.600" }}
+                                            onClick={() =>
+                                                setIsEditingNotepadName(true)
+                                            }
+                                        />
+                                    </Flex>
                                 )}
                             </Flex>
-                            {/* SP表示 */}
-                            <Box display={{ base: "block", md: "none" }}>
-                                <Menu>
-                                    <MenuButton
-                                        as={IconButton}
-                                        aria-label="Options"
-                                        icon={<HamburgerIcon />}
-                                    />
-                                    <MenuList>
-                                        <MenuItem
-                                            onClick={
-                                                homeContext.onOpenDetectPromptModal
-                                            }
-                                            color="purple.500"
-                                        >
-                                            ジュモン
-                                        </MenuItem>
-                                        <MenuItem
-                                            onClick={() => {
-                                                homeContext.handleDeleteNotepadClick(
-                                                    showingNotepad.id
-                                                );
-                                            }}
-                                            color="red.500"
-                                        >
-                                            メモ帳を削除
-                                        </MenuItem>
-                                        <MenuItem
-                                            isDisabled={
-                                                homeContext.getCurrentContentText() ===
-                                                showingPage.written_content
-                                            }
-                                            onClick={
-                                                homeContext.handleSaveShowingPageClick
-                                            }
-                                        >
-                                            ページを保存
-                                        </MenuItem>
-                                        <MenuItem
-                                            isDisabled={
-                                                homeContext.getCurrentContentText() ===
-                                                    "" ||
-                                                showingPage.is_changed_by_prompt
-                                            }
-                                            onClick={
-                                                homeContext.handleSaveAndChangeWithPromptClick
-                                            }
-                                        >
-                                            魔法で変換
-                                        </MenuItem>
-                                    </MenuList>
-                                </Menu>
+                            <Box flex={1}>
+                                <Flex justifyContent="flex-end" h="100%" p={4}>
+                                    <NotepadButtons forMobile={true} />
+                                </Flex>
                             </Box>
-                            {/* PC表示 */}
-                            <Box display={{ base: "none", md: "block" }}>
-                                <Button
-                                    h="100%"
-                                    mr={2}
-                                    minW="120px"
-                                    fontSize="lg"
-                                    shadow={"md"}
-                                    colorScheme="purple"
-                                    onClick={
-                                        homeContext.onOpenDetectPromptModal
-                                    }
-                                >
-                                    ジュモン
-                                </Button>
-                                <Button
-                                    h="100%"
-                                    mr={2}
-                                    minW="120px"
-                                    fontSize="lg"
-                                    shadow={"md"}
-                                    colorScheme="red"
-                                    onClick={() => {
-                                        homeContext.handleDeleteNotepadClick(
-                                            showingNotepad.id
-                                        );
-                                    }}
-                                >
-                                    メモ帳を削除
-                                </Button>
-                                <Button
-                                    h="100%"
-                                    mr={2}
-                                    minW="120px"
-                                    fontSize="lg"
-                                    shadow={"md"}
-                                    onClick={
-                                        homeContext.handleSaveShowingPageClick
-                                    }
-                                    isDisabled={
-                                        homeContext.getCurrentContentText() ===
-                                        showingPage.written_content
-                                    }
-                                >
-                                    ページを保存
-                                </Button>
-                                <Button
-                                    h="100%"
-                                    minW="120px"
-                                    fontSize="lg"
-                                    colorScheme="blue"
-                                    shadow={"md"}
-                                    isDisabled={
-                                        homeContext.getCurrentContentText() ===
-                                            "" ||
-                                        showingPage.is_changed_by_prompt
-                                    }
-                                    onClick={
-                                        homeContext.handleSaveAndChangeWithPromptClick
-                                    }
-                                >
-                                    魔法で変換
-                                </Button>
-                            </Box>
-                        </>
-                    ) : (
-                        <Box />
-                    )}
-                </Flex>
+                        </Flex>
+                    </>
+                ) : (
+                    <Box />
+                )}
             </Box>
         </>
     );
