@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useHomeContext } from "../Contexts/HomeContext";
 import { Box, Flex, Button } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import CheckDisplayIcon from "../CheckDisplayIcon";
+import "./shelf-item.css";
 
 const Shelf = () => {
     const homeContext = useHomeContext();
@@ -10,6 +10,14 @@ const Shelf = () => {
 
     // 新着順で取得する
     const notepads = homeContext.getAllNotepads().toReversed();
+
+    const prevIds = useRef(notepads.map((n) => n.id));
+
+    const newId = notepads.find(
+        (idObj) => !prevIds.current.includes(idObj.id)
+    )?.id;
+
+    prevIds.current = notepads.map((n) => n.id);
 
     return (
         <Flex p={4} direction="column" h="100%">
@@ -43,21 +51,20 @@ const Shelf = () => {
                     },
                 }}
             >
-                {notepads.map((notepad, i) => {
+                {notepads.map((notepad) => {
                     const isActive =
                         showingPage && showingPage.notepad_id === notepad.id;
+                    const fadeClass =
+                        notepad.id === newId ? "shelf-fadein" : "";
                     return (
                         <Box
+                            className={fadeClass}
                             position="relative"
                             display="inline-block"
-                            key={i}
+                            key={notepad.id}
                             w="100%"
-                            style={{
-                                transform: isActive
-                                    ? "translateX(20px)"
-                                    : "none",
-                                transition: "transform 0.2s",
-                            }}
+                            transform={isActive ? "translateX(20px)" : "none"}
+                            transition="transform 0.2s"
                         >
                             {homeContext.getIsAllPromptsExpected(
                                 notepad.id

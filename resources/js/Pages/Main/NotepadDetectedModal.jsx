@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
-import { Box, Flex, Button } from "@chakra-ui/react";
+import React, { useContext, useState, useEffect } from "react";
+import { Box, Flex } from "@chakra-ui/react";
 import { HomeContext } from "./Contexts/HomeContext";
 import ModalTemplete from "./ModalTemplete.jsx";
+import Confetti from "react-confetti";
 
 const NotepadDetectedModal = () => {
     const homeContext = useContext(HomeContext);
@@ -10,8 +11,38 @@ const NotepadDetectedModal = () => {
         return null;
     }
 
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const ModalBody = (
         <Box>
+            <Confetti
+                width={windowSize.width}
+                height={windowSize.height}
+                numberOfPieces={200}
+                recycle={true}
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: windowSize.width,
+                    height: windowSize.height,
+                    pointerEvents: "none",
+                }}
+            />
             メモ帳の呪文を解読した!
             <Box
                 mt={4}

@@ -37,3 +37,4 @@ sail artisan view:clear
 必要に応じて各種キャッシュをクリアしてください。
 
 npm install react-icons
+npm install react-confetti
