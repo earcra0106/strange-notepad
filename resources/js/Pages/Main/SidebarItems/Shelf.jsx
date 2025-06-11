@@ -11,6 +11,19 @@ const Shelf = () => {
     const homeContext = useHomeContext();
     const showingPage = homeContext.getShowingPage();
 
+    const requestPageChange = (notepadId) => {
+        if (
+            showingPage &&
+            homeContext.getCurrentContentText() !== showingPage.written_content
+        ) {
+            homeContext.setPageChangeTargetNotepadId(notepadId);
+            homeContext.setPageChangeTargetPageNumber(1);
+            homeContext.onOpenConfirmPageChangeWhenUnsavedModal();
+        } else {
+            homeContext.handlePageChange(notepadId, 1);
+        }
+    };
+
     // 新着順で取得する
     const notepads = homeContext.getAllNotepads().toReversed();
 
@@ -85,11 +98,9 @@ const Shelf = () => {
                                 />
                             )}
                             <Button
-                                onClick={() =>
-                                    homeContext.handleShelfNotepadClick(
-                                        notepad.id
-                                    )
-                                }
+                                onClick={() => {
+                                    requestPageChange(notepad.id);
+                                }}
                                 w="80%"
                                 px={4}
                                 py={2}

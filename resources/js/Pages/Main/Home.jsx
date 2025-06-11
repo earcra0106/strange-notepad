@@ -13,6 +13,7 @@ import NotepadDetectedModal from "./NotepadDetectedModal";
 import NoChangeModal from "./NoChangeModal";
 import ConfirmChangeModal from "./ConfirmChangeModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import ConfirmPageChangeWhenUnsavedModal from "./ConfirmPageChangeWhenUnsavedModal";
 
 const Home = ({ notepads, modifierPrompts, changePrompts }) => {
     const contextValue = useHomeContextValue(
@@ -64,6 +65,14 @@ const Home = ({ notepads, modifierPrompts, changePrompts }) => {
                         <NoChangeModal />
                         <ConfirmChangeModal />
                         <ConfirmDeleteModal />
+                        <ConfirmPageChangeWhenUnsavedModal
+                            func={() =>
+                                contextValue.handlePageChange(
+                                    contextValue.getPageChangeTargetNotepadId(),
+                                    contextValue.getPageChangeTargetPageNumber()
+                                )
+                            }
+                        />
                     </>
                 ) : null}
             </HomeContext.Provider>

@@ -8,6 +8,10 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const [showingPage, setShowingPage] = useState(null);
     const [currentContentText, setCurrentContentText] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [pageChangeTargetNotepadId, setPageChangeTargetNotepadId] =
+        useState(null);
+    const [pageChangeTargetPageNumber, setPageChangeTargetPageNumber] =
+        useState(0);
 
     const {
         isOpen: isDetectPromptModalOpen,
@@ -38,6 +42,20 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         onOpen: onOpenConfirmDeleteModal,
         onClose: onCloseConfirmDeleteModal,
     } = useDisclosure();
+
+    const {
+        isOpen: isConfirmPageChangeWhenUnsavedModalOpen,
+        onOpen: onOpenConfirmPageChangeWhenUnsavedModal,
+        onClose: onCloseConfirmPageChangeWhenUnsavedModal,
+    } = useDisclosure();
+
+    const getPageChangeTargetPageNumber = () => {
+        return pageChangeTargetPageNumber;
+    };
+
+    const getPageChangeTargetNotepadId = () => {
+        return pageChangeTargetNotepadId;
+    };
 
     // ロード中trueのフラグを取得
     const getIsLoading = () => {
@@ -391,6 +409,15 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         isConfirmDeleteModalOpen,
         onOpenConfirmDeleteModal,
         onCloseConfirmDeleteModal,
+
+        isConfirmPageChangeWhenUnsavedModalOpen,
+        onOpenConfirmPageChangeWhenUnsavedModal,
+        onCloseConfirmPageChangeWhenUnsavedModal,
+
+        getPageChangeTargetPageNumber,
+        setPageChangeTargetPageNumber,
+        getPageChangeTargetNotepadId,
+        setPageChangeTargetNotepadId,
 
         getShowingPage,
 

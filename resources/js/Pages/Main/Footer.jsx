@@ -4,6 +4,7 @@ import { Box, Flex, IconButton } from "@chakra-ui/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useHomeContext } from "./Contexts/HomeContext";
 import NotepadButtons from "./NotepadButtons.jsx";
+import ConfirmPageChangeWhenUnsavedModal from "./ConfirmPageChangeWhenUnsavedModal";
 
 const Footer = () => {
     const homeContext = useHomeContext();
@@ -11,6 +12,18 @@ const Footer = () => {
 
     const [currentPageNumber, setCurrentPageNumber] = useState(0);
     const [totalPageCount, setTotalPageCount] = useState(0);
+
+    const requestPageChange = (notepadId, pageNumber) => {
+        if (
+            homeContext.getCurrentContentText() !== showingPage.written_content
+        ) {
+            homeContext.setPageChangeTargetNotepadId(notepadId);
+            homeContext.setPageChangeTargetPageNumber(pageNumber);
+            homeContext.onOpenConfirmPageChangeWhenUnsavedModal();
+        } else {
+            homeContext.handlePageChange(notepadId, pageNumber);
+        }
+    };
 
     useEffect(() => {
         if (showingPage) {
@@ -37,7 +50,7 @@ const Footer = () => {
                                 variant="roundedWhite"
                                 icon={<MdKeyboardArrowLeft />}
                                 onClick={() => {
-                                    homeContext.handlePageChange(
+                                    requestPageChange(
                                         showingPage.notepad_id,
                                         showingPage.page_number - 1
                                     );
@@ -51,7 +64,7 @@ const Footer = () => {
                                 variant="roundedWhite"
                                 icon={<MdKeyboardArrowRight />}
                                 onClick={() => {
-                                    homeContext.handlePageChange(
+                                    requestPageChange(
                                         showingPage.notepad_id,
                                         showingPage.page_number + 1
                                     );
