@@ -4,6 +4,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import Shelf from "./SidebarItems/Shelf";
 import UserIcon from "./SidebarItems/UserIcon";
+import { MdLogin, MdPersonAdd } from "react-icons/md";
 
 const Sidebar = () => {
     const { auth } = usePage().props;
@@ -77,7 +78,7 @@ const Sidebar = () => {
                                             textAlign="center"
                                             color="black"
                                         >
-                                            ログイン
+                                            <MdLogin size={28} />
                                         </Box>
                                     </Link>
                                     <Link href={route("register")}>
@@ -86,7 +87,7 @@ const Sidebar = () => {
                                             textAlign="center"
                                             color="black"
                                         >
-                                            ユーザ登録
+                                            <MdPersonAdd size={28} />
                                         </Box>
                                     </Link>
                                 </Flex>

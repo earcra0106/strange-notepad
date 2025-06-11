@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
 import { HomeContext } from "../Contexts/HomeContext";
@@ -13,6 +13,12 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         isOpen: isDetectPromptModalOpen,
         onOpen: onOpenDetectPromptModal,
         onClose: onCloseDetectPromptModal,
+    } = useDisclosure();
+
+    const {
+        isOpen: isNotepadDetectedModalOpen,
+        onOpen: onOpenNotepadDetectedModal,
+        onClose: onCloseNotepadDetectedModal,
     } = useDisclosure();
 
     // ロード中trueのフラグを取得
@@ -128,6 +134,33 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         );
     };
 
+    const getIsModifierPromptExpected = (notepad_id) => {
+        const notepad = getNotepadById(notepad_id);
+        if (!notepad) {
+            console.error(`Notepad with ID ${notepad_id} not found.`);
+            return false;
+        }
+        return (
+            notepad.modifier_prompt_id === notepad.expected_modifier_prompt_id
+        );
+    };
+
+    const getIsChangePromptExpected = (notepad_id) => {
+        const notepad = getNotepadById(notepad_id);
+        if (!notepad) {
+            console.error(`Notepad with ID ${notepad_id} not found.`);
+            return false;
+        }
+        return notepad.change_prompt_id === notepad.expected_change_prompt_id;
+    };
+
+    const getIsAllPromptsExpected = (notepad_id) => {
+        return (
+            getIsModifierPromptExpected(notepad_id) &&
+            getIsChangePromptExpected(notepad_id)
+        );
+    };
+
     // Shelf内項目をクリックしたときの処理
     const handleShelfNotepadClick = (notepad_id) => {
         const page = getPageByPageNumber(notepad_id, 1);
@@ -137,6 +170,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             return;
         }
 
+        console.log("メモ帳: ", getNotepadById(notepad_id));
         setShowingPage(page);
     };
 
@@ -220,6 +254,16 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             });
 
             const newNotepad = response.data;
+
+            if (
+                newNotepad.expected_modifier_prompt_id ===
+                    new_expected_modifier_prompt_id &&
+                newNotepad.expected_change_prompt_id ===
+                    new_expected_change_prompt_id
+            ) {
+                onOpenNotepadDetectedModal();
+            }
+
             updateOrCreateNotepadInBrowser(newNotepad, true);
         } catch (error) {
             console.error("メモ帳の変更に失敗しました:", error);
@@ -369,6 +413,10 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         onOpenDetectPromptModal,
         onCloseDetectPromptModal,
 
+        isNotepadDetectedModalOpen,
+        onOpenNotepadDetectedModal,
+        onCloseNotepadDetectedModal,
+
         getShowingPage,
 
         getAllNotepads,
@@ -395,6 +443,10 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         getChangePromptById,
         getChangePromptByNotepadId,
         getExpectedChangePromptByNotepadId,
+
+        getIsModifierPromptExpected,
+        getIsChangePromptExpected,
+        getIsAllPromptsExpected,
 
         handleShelfNotepadClick,
         handlePageChange,

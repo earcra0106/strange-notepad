@@ -25,9 +25,9 @@ const Footer = () => {
 
     return (
         <>
-            <Box p={8} h="100%">
+            <Box px={8} py={4} h="100%">
                 <Flex h="100%">
-                    <Box w="20%">
+                    <Box w="20%" py={4}>
                         <Flex
                             minW="300px"
                             justifyContent="space-between"

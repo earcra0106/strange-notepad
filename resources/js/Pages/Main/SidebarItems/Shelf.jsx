@@ -2,6 +2,7 @@ import React from "react";
 import { useHomeContext } from "../Contexts/HomeContext";
 import { Box, Flex, Button } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
+import CheckDisplayIcon from "../CheckDisplayIcon";
 
 const Shelf = () => {
     const homeContext = useHomeContext();
@@ -24,6 +25,7 @@ const Shelf = () => {
             <Box
                 flex="1"
                 overflowY="auto"
+                overflowX="hidden"
                 p={2}
                 bg="gray.700"
                 borderRadius="md"
@@ -41,46 +43,68 @@ const Shelf = () => {
                     },
                 }}
             >
-                {notepads.map((notepad, i) => (
-                    <Button
-                        onClick={() => {
-                            homeContext.handleShelfNotepadClick(notepad.id);
-                        }}
-                        w="80%"
-                        key={i}
-                        p={2}
-                        mb={2}
-                        bg="gray.500"
-                        borderRadius="sm"
-                        color={
-                            homeContext.isNotepadHasChangedPage(notepad.id)
-                                ? "blue.100"
-                                : "white"
-                        }
-                        _hover={{ bg: "gray.600" }}
-                        _active={{ bg: "gray.700" }}
-                        transition="all 0.2s"
-                        justifyContent="flex-start"
-                        whiteSpace="nowrap"
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                        transform={() => {
-                            if (showingPage) {
-                                return showingPage.notepad_id === notepad.id
+                {notepads.map((notepad, i) => {
+                    const isActive =
+                        showingPage && showingPage.notepad_id === notepad.id;
+                    return (
+                        <Box
+                            position="relative"
+                            display="inline-block"
+                            key={i}
+                            w="100%"
+                            style={{
+                                transform: isActive
                                     ? "translateX(20px)"
-                                    : "none";
-                            }
-                            return "none";
-                        }}
-                        boxShadow={
-                            homeContext.isNotepadHasChangedPage(notepad.id)
-                                ? "0 0 10px 2px white"
-                                : "none"
-                        }
-                    >
-                        {notepad.name}
-                    </Button>
-                ))}
+                                    : "none",
+                                transition: "transform 0.2s",
+                            }}
+                        >
+                            {homeContext.getIsAllPromptsExpected(
+                                notepad.id
+                            ) && (
+                                <Box
+                                    position="absolute"
+                                    top={0}
+                                    left={0}
+                                    bottom={2}
+                                    width="6px"
+                                    bg="green.400"
+                                    borderRadius="sm"
+                                    zIndex={1}
+                                />
+                            )}
+                            <Button
+                                onClick={() =>
+                                    homeContext.handleShelfNotepadClick(
+                                        notepad.id
+                                    )
+                                }
+                                w="80%"
+                                px={4}
+                                py={2}
+                                mb={2}
+                                bg="gray.500"
+                                borderRadius="sm"
+                                color="white"
+                                _hover={{ bg: "gray.600" }}
+                                _active={{ bg: "gray.700" }}
+                                justifyContent="flex-start"
+                                whiteSpace="nowrap"
+                                overflow="hidden"
+                                textOverflow="ellipsis"
+                                boxShadow={
+                                    homeContext.isNotepadHasChangedPage(
+                                        notepad.id
+                                    )
+                                        ? "0 0 10px 2px white"
+                                        : "none"
+                                }
+                            >
+                                {notepad.name}
+                            </Button>
+                        </Box>
+                    );
+                })}
             </Box>
         </Flex>
     );

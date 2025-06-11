@@ -8,9 +8,10 @@ import {
     MenuList,
     Tooltip,
 } from "@chakra-ui/react";
-import { DeleteIcon, HamburgerIcon } from "@chakra-ui/icons";
-import { MdLightbulbOutline, MdSave } from "react-icons/md";
+import { DeleteIcon, HamburgerIcon, CheckIcon } from "@chakra-ui/icons";
+import { MdLightbulbOutline, MdSave, MdAutoFixHigh } from "react-icons/md";
 import { HomeContext } from "./Contexts/HomeContext";
+import CheckDisplayIcon from "./CheckDisplayIcon";
 
 const NotepadButtons = ({ forMobile = false }) => {
     const homeContext = useContext(HomeContext);
@@ -36,13 +37,35 @@ const NotepadButtons = ({ forMobile = false }) => {
                         borderColor="gray.600"
                     >
                         <MenuItem
-                            color="purple.200"
+                            icon={
+                                homeContext.getIsAllPromptsExpected(
+                                    showingNotepad.id
+                                ) ? (
+                                    <CheckIcon />
+                                ) : (
+                                    <MdLightbulbOutline />
+                                )
+                            }
+                            color={
+                                homeContext.getIsAllPromptsExpected(
+                                    showingNotepad.id
+                                )
+                                    ? "green.400"
+                                    : "purple.200"
+                            }
                             bg="gray.800"
-                            onClick={homeContext.onOpenDetectPromptModal}
+                            onClick={
+                                homeContext.getIsAllPromptsExpected(
+                                    showingNotepad.id
+                                )
+                                    ? homeContext.onOpenNotepadDetectedModal
+                                    : homeContext.onOpenDetectPromptModal
+                            }
                         >
                             ジュモンを推理
                         </MenuItem>
                         <MenuItem
+                            icon={<MdSave />}
                             color="white"
                             bg="gray.800"
                             isDisabled={
@@ -54,7 +77,8 @@ const NotepadButtons = ({ forMobile = false }) => {
                             ページを保存
                         </MenuItem>
                         <MenuItem
-                            color="white"
+                            icon={<MdAutoFixHigh />}
+                            color="purple.200"
                             bg="gray.800"
                             isDisabled={
                                 homeContext.getCurrentContentText() === "" ||
@@ -67,6 +91,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                             魔法で変換
                         </MenuItem>
                         <MenuItem
+                            icon={<DeleteIcon />}
                             color="red.200"
                             bg="gray.800"
                             onClick={() => {
@@ -98,14 +123,23 @@ const NotepadButtons = ({ forMobile = false }) => {
                     />
                 </Tooltip>
                 <Tooltip label="ジュモンを推理" hasArrow>
-                    <IconButton
-                        icon={<MdLightbulbOutline />}
-                        variant="roundedWhite"
-                        color="purple"
-                        ml={4}
-                        onClick={homeContext.onOpenDetectPromptModal}
-                        // todo:推理が的中していたらdisableする
-                    />
+                    <Box position="relative" display="inline-block" ml={4}>
+                        <IconButton
+                            icon={<MdLightbulbOutline />}
+                            variant="roundedWhite"
+                            color="purple"
+                            onClick={
+                                homeContext.getIsAllPromptsExpected(
+                                    showingNotepad.id
+                                )
+                                    ? homeContext.onOpenNotepadDetectedModal
+                                    : homeContext.onOpenDetectPromptModal
+                            }
+                        />
+                        {homeContext.getIsAllPromptsExpected(
+                            showingNotepad.id
+                        ) && <CheckDisplayIcon />}
+                    </Box>
                 </Tooltip>
                 <Tooltip label="ページを保存" hasArrow>
                     <IconButton
@@ -121,8 +155,11 @@ const NotepadButtons = ({ forMobile = false }) => {
                 </Tooltip>
                 <Tooltip label="魔法で変換" hasArrow>
                     <IconButton
-                        icon={<MdSave />}
-                        variant="roundedPurple"
+                        icon={<MdAutoFixHigh />}
+                        variant="roundedMagic"
+                        fontSize="3xl"
+                        h={20}
+                        minW={20}
                         ml={4}
                         mr={4}
                         isDisabled={

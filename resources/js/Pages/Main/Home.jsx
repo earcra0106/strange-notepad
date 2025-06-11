@@ -9,6 +9,7 @@ import useHomeContextValue from "./Hooks/useHomeContextValue";
 import LoadOverlay from "./LoadOverlay";
 import DetectPromptModal from "./DetectPromptModal";
 import theme from "./Theme/Theme";
+import NotepadDetectedModal from "./NotepadDetectedModal";
 
 const Home = ({ notepads, modifierPrompts, changePrompts }) => {
     const contextValue = useHomeContextValue(
@@ -29,7 +30,7 @@ const Home = ({ notepads, modifierPrompts, changePrompts }) => {
                         <Flex>
                             {/* Sidebar */}
                             <Box
-                                w="240px"
+                                w="280px"
                                 bg="gray.900"
                                 borderRight={"1px solid"}
                                 borderColor="gray.700"
@@ -46,7 +47,7 @@ const Home = ({ notepads, modifierPrompts, changePrompts }) => {
                                     <Content />
                                 </Box>
                                 {/* Footer */}
-                                <Box h="120px" bg="gray.700">
+                                <Box h="140px" bg="gray.700">
                                     <Footer />
                                 </Box>
                             </Flex>
@@ -54,6 +55,7 @@ const Home = ({ notepads, modifierPrompts, changePrompts }) => {
                     </Grid>
                 </Box>
                 {contextValue.getShowingNotepad() && <DetectPromptModal />}
+                {contextValue.getShowingNotepad() && <NotepadDetectedModal />}
             </HomeContext.Provider>
         </ChakraProvider>
     );

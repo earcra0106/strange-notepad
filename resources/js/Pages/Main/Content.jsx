@@ -30,7 +30,6 @@ const Content = () => {
                 justifyContent="center"
                 textAlign="center"
                 h="100%"
-                color="rgba(0, 0, 0, 0.5)"
             >
                 メモ帳を選択しましょう
             </Box>
@@ -86,7 +85,7 @@ const Content = () => {
                                 value={homeContext.getCurrentContentText()}
                                 color={
                                     showingPage.is_changed_by_prompt
-                                        ? "blue.500"
+                                        ? "purple.600"
                                         : "black"
                                 }
                             ></Box>
