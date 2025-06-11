@@ -90,18 +90,11 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         try {
             const notepad = getNotepadById(notepad_id);
             if (!notepad) {
-                console.error(
-                    `getPageCount(${notepad_id}): メモ帳が見つかりません`
-                );
                 return 0;
             }
 
             return notepad.pages.length;
         } catch (error) {
-            console.error(
-                `getPageCount(${notepad_id})ページ数の取得に失敗しました:`,
-                error
-            );
             return 0;
         }
     };
@@ -155,7 +148,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const getIsModifierPromptExpected = (notepad_id) => {
         const notepad = getNotepadById(notepad_id);
         if (!notepad) {
-            console.error(`Notepad with ID ${notepad_id} not found.`);
             return false;
         }
         return (
@@ -166,7 +158,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const getIsChangePromptExpected = (notepad_id) => {
         const notepad = getNotepadById(notepad_id);
         if (!notepad) {
-            console.error(`Notepad with ID ${notepad_id} not found.`);
             return false;
         }
         return notepad.change_prompt_id === notepad.expected_change_prompt_id;
@@ -183,12 +174,10 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const handleShelfNotepadClick = (notepad_id) => {
         const page = getPageByPageNumber(notepad_id, 1);
         if (!page) {
-            console.log("ページが見つかりませんでした");
             setShowingPage(null);
             return;
         }
 
-        console.log("メモ帳: ", getNotepadById(notepad_id));
         setShowingPage(page);
     };
 
@@ -196,7 +185,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const handlePageChange = (notepad_id, page_number) => {
         const page = getPageByPageNumber(notepad_id, page_number);
         if (!page) {
-            console.log("ページが見つかりませんでした");
             setShowingPage(null);
             return;
         }
@@ -211,9 +199,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             const newNotepad = response.data;
             updateOrCreateNotepadInBrowser(newNotepad, true);
-        } catch (error) {
-            console.error("メモ帳の作成に失敗しました:", error);
-        }
+        } catch (error) {}
     };
 
     // Notepadを削除するボタンをクリックしたときの処理
@@ -225,9 +211,7 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             setShowingPage(null);
             deleteNotepadFromBrowser(notepad_id, true);
-        } catch (error) {
-            console.error("メモ帳の削除に失敗しました:", error);
-        }
+        } catch (error) {}
     };
 
     // Notepadの情報を変更するボタンをクリックしたときの処理
@@ -242,7 +226,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             const newNotepad = response.data;
             updateOrCreateNotepadInBrowser(newNotepad, true);
         } catch (error) {
-            console.error("メモ帳の変更に失敗しました:", error);
         } finally {
             setIsLoading(false);
         }
@@ -276,7 +259,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             updateOrCreateNotepadInBrowser(newNotepad, true);
         } catch (error) {
-            console.error("メモ帳の変更に失敗しました:", error);
         } finally {
             setIsLoading(false);
         }
@@ -302,7 +284,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                 is_changed_by_prompt: new_page.is_changed_by_prompt,
             }));
         } catch (error) {
-            console.error("ページの変更に失敗しました:", error);
         } finally {
             setIsLoading(false);
         }
@@ -312,20 +293,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const handleSaveAndChangeWithPromptClick = async () => {
         try {
             setIsLoading(true);
-
-            console.log(
-                "【ルール】\n" +
-                    "1. " +
-                    getModifierPromptByNotepadId(getShowingPage().notepad_id)
-                        .prompt +
-                    "\n" +
-                    "2. " +
-                    getChangePromptByNotepadId(getShowingPage().notepad_id)
-                        .prompt +
-                    "\n" +
-                    "【メモ本文】\n" +
-                    getCurrentContentText()
-            );
 
             const aiResponse = await axios.post("api/ai/change-note-content", {
                 content: getCurrentContentText(),
@@ -358,7 +325,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             setShowingPage(new_page);
         } catch (error) {
-            console.error("ページの変更に失敗しました:", error);
         } finally {
             setIsLoading(false);
         }
@@ -369,7 +335,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             (notepad) => notepad.id === notepad_id
         );
         if (!notepad) {
-            console.error(`Notepad with ID ${notepad_id} not found.`);
             return false;
         }
 
@@ -384,10 +349,8 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
                     prevNotepad.id === notepad.id ? notepad : prevNotepad
                 )
             );
-            if (isLogging) console.log("メモ帳の情報を更新しました:", notepad);
         } else {
             setAllNotepads((prevNotepads) => [...prevNotepads, notepad]);
-            if (isLogging) console.log("メモ帳を新規作成しました:", notepad);
         }
     };
 
@@ -396,7 +359,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         setAllNotepads((prevNotepads) =>
             prevNotepads.filter((notepad) => notepad.id !== notepad_id)
         );
-        if (isLogging) console.log("メモ帳を削除しました:", notepad_id);
     };
 
     // フロント側のpageの情報を更新する
@@ -407,7 +369,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         );
 
         updateOrCreateNotepadInBrowser(notepad, false);
-        if (isLogging) console.log("ページの情報を更新しました:", page);
     };
 
     return {
