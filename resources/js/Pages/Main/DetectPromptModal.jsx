@@ -80,7 +80,7 @@ const DetectPromptModal = () => {
                 );
                 homeContext.onCloseDetectPromptModal();
             }}
-            titleComponent="ジュモンの推測"
+            titleComponent="ジュモンを推理"
             bodyComponent={ModalBody}
             mainButtonText="設定する"
             closeButtonText="キャンセル"

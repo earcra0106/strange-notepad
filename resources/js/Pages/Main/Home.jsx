@@ -7,9 +7,12 @@ import Footer from "./Footer";
 import { HomeContext } from "./Contexts/HomeContext";
 import useHomeContextValue from "./Hooks/useHomeContextValue";
 import LoadOverlay from "./LoadOverlay";
-import DetectPromptModal from "./DetectPromptModal";
 import theme from "./Theme/Theme";
+import DetectPromptModal from "./DetectPromptModal";
 import NotepadDetectedModal from "./NotepadDetectedModal";
+import NoChangeModal from "./NoChangeModal";
+import ConfirmChangeModal from "./ConfirmChangeModal";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 const Home = ({ notepads, modifierPrompts, changePrompts }) => {
     const contextValue = useHomeContextValue(
@@ -54,8 +57,15 @@ const Home = ({ notepads, modifierPrompts, changePrompts }) => {
                         </Flex>
                     </Grid>
                 </Box>
-                {contextValue.getShowingNotepad() && <DetectPromptModal />}
-                {contextValue.getShowingNotepad() && <NotepadDetectedModal />}
+                {contextValue.getShowingNotepad() ? (
+                    <>
+                        <DetectPromptModal />
+                        <NotepadDetectedModal />
+                        <NoChangeModal />
+                        <ConfirmChangeModal />
+                        <ConfirmDeleteModal />
+                    </>
+                ) : null}
             </HomeContext.Provider>
         </ChakraProvider>
     );

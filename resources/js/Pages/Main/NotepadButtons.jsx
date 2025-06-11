@@ -17,6 +17,7 @@ import {
     MdDeleteOutline,
 } from "react-icons/md";
 import { HomeContext } from "./Contexts/HomeContext";
+import CheckDisplayIcon from "./CheckDisplayIcon";
 
 const NotepadButtons = ({ forMobile = false }) => {
     const homeContext = useContext(HomeContext);
@@ -89,9 +90,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                                 homeContext.getCurrentContentText() === "" ||
                                 showingPage.is_changed_by_prompt
                             }
-                            onClick={
-                                homeContext.handleSaveAndChangeWithPromptClick
-                            }
+                            onClick={homeContext.onOpenConfirmChangeModal}
                         >
                             魔法で変換
                         </MenuItem>
@@ -99,11 +98,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                             icon={<MdDeleteOutline />}
                             color="red.200"
                             bg="gray.800"
-                            onClick={() => {
-                                homeContext.handleDeleteNotepadClick(
-                                    showingNotepad.id
-                                );
-                            }}
+                            onClick={homeContext.onOpenConfirmDeleteModal}
                         >
                             メモ帳を削除
                         </MenuItem>
@@ -120,12 +115,27 @@ const NotepadButtons = ({ forMobile = false }) => {
                         variant="roundedWhite"
                         color="red"
                         ml={4}
-                        onClick={() => {
-                            homeContext.handleDeleteNotepadClick(
-                                showingNotepad.id
-                            );
-                        }}
+                        onClick={homeContext.onOpenConfirmDeleteModal}
                     />
+                </Tooltip>
+                <Tooltip label="ジュモンを推理" hasArrow>
+                    <Box position="relative" display="inline-block" ml={4}>
+                        <IconButton
+                            icon={<MdLightbulbOutline />}
+                            variant="roundedWhite"
+                            color="purple"
+                            onClick={
+                                homeContext.getIsAllPromptsExpected(
+                                    showingNotepad.id
+                                )
+                                    ? homeContext.onOpenNotepadDetectedModal
+                                    : homeContext.onOpenDetectPromptModal
+                            }
+                        />
+                        {homeContext.getIsAllPromptsExpected(
+                            showingNotepad.id
+                        ) && <CheckDisplayIcon />}
+                    </Box>
                 </Tooltip>
                 <Tooltip label="ページを保存" hasArrow>
                     <IconButton
@@ -146,22 +156,6 @@ const NotepadButtons = ({ forMobile = false }) => {
                         }
                     />
                 </Tooltip>
-                <Tooltip label="ジュモンを推理" hasArrow>
-                    <Box position="relative" display="inline-block" ml={4}>
-                        <IconButton
-                            icon={<MdLightbulbOutline />}
-                            variant="roundedWhite"
-                            color="purple"
-                            onClick={
-                                homeContext.getIsAllPromptsExpected(
-                                    showingNotepad.id
-                                )
-                                    ? homeContext.onOpenNotepadDetectedModal
-                                    : homeContext.onOpenDetectPromptModal
-                            }
-                        />
-                    </Box>
-                </Tooltip>
                 <Tooltip label="魔法で変換" hasArrow>
                     <IconButton
                         icon={<MdAutoFixHigh />}
@@ -175,7 +169,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                             homeContext.getCurrentContentText() === "" ||
                             showingPage.is_changed_by_prompt
                         }
-                        onClick={homeContext.handleSaveAndChangeWithPromptClick}
+                        onClick={homeContext.onOpenConfirmChangeModal}
                     />
                 </Tooltip>
             </Box>

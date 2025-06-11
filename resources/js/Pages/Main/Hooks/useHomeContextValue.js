@@ -21,6 +21,24 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         onClose: onCloseNotepadDetectedModal,
     } = useDisclosure();
 
+    const {
+        isOpen: isNoChangeModalOpen,
+        onOpen: onOpenNoChangeModal,
+        onClose: onCloseNoChangeModal,
+    } = useDisclosure();
+
+    const {
+        isOpen: isConfirmChangeModalOpen,
+        onOpen: onOpenConfirmChangeModal,
+        onClose: onCloseConfirmChangeModal,
+    } = useDisclosure();
+
+    const {
+        isOpen: isConfirmDeleteModalOpen,
+        onOpen: onOpenConfirmDeleteModal,
+        onClose: onCloseConfirmDeleteModal,
+    } = useDisclosure();
+
     // ロード中trueのフラグを取得
     const getIsLoading = () => {
         return isLoading;
@@ -201,14 +219,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     // Notepadを削除するボタンをクリックしたときの処理
     const handleDeleteNotepadClick = async (notepad_id) => {
         try {
-            if (
-                !confirm(
-                    "選択中のメモ帳を削除しますか？\n\nこの操作は取り消せません。"
-                )
-            ) {
-                return;
-            }
-
             const response = await axios.delete(`/notepad`, {
                 data: { notepad_id: notepad_id },
             });
@@ -301,14 +311,6 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     // プロンプトで変更するボタンをクリックしたときの処理
     const handleSaveAndChangeWithPromptClick = async () => {
         try {
-            if (
-                !confirm(
-                    "魔力をこめて保存しますか？\n\nメモ帳に込められたジュモンで、現在のページの内容が書き換わります。"
-                )
-            ) {
-                return;
-            }
-
             setIsLoading(true);
 
             console.log(
@@ -327,19 +329,19 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             const aiResponse = await axios.post("api/ai/change-note-content", {
                 content: getCurrentContentText(),
-                modifier_prompt: getModifierPromptByNotepadId(
+                modifier_prompt_id: getModifierPromptByNotepadId(
                     getShowingPage().notepad_id
-                ).prompt,
-                change_prompt: getChangePromptByNotepadId(
+                ).id,
+                change_prompt_id: getChangePromptByNotepadId(
                     getShowingPage().notepad_id
-                ).prompt,
+                ).id,
             });
 
             const new_changed_content = aiResponse.data.result;
 
             // 変更されたページの内容が、現在のページの内容と同じ場合は、何もしない
             if (new_changed_content === getShowingPage().written_content) {
-                console.log("魔法が不発になりました。");
+                onOpenNoChangeModal();
                 return;
             }
 
@@ -416,6 +418,18 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         isNotepadDetectedModalOpen,
         onOpenNotepadDetectedModal,
         onCloseNotepadDetectedModal,
+
+        isNoChangeModalOpen,
+        onOpenNoChangeModal,
+        onCloseNoChangeModal,
+
+        isConfirmChangeModalOpen,
+        onOpenConfirmChangeModal,
+        onCloseConfirmChangeModal,
+
+        isConfirmDeleteModalOpen,
+        onOpenConfirmDeleteModal,
+        onCloseConfirmDeleteModal,
 
         getShowingPage,
 
