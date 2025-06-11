@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Box, Flex, IconButton, Input, Text } from "@chakra-ui/react";
 import { useHomeContext } from "./Contexts/HomeContext";
-import { EditIcon, CheckIcon } from "@chakra-ui/icons";
+import { MdEdit, MdCheck } from "react-icons/md";
 import NotepadButtons from "./NotepadButtons.jsx";
 
 const Header = () => {
@@ -76,7 +76,7 @@ const Header = () => {
                                             placeholder="メモ帳の名前を入力"
                                         />
                                         <IconButton
-                                            icon={<CheckIcon />}
+                                            icon={<MdCheck />}
                                             borderRadius="full"
                                             bg="transparent"
                                             color="white"
@@ -113,7 +113,7 @@ const Header = () => {
                                             {notepadName}
                                         </Box>
                                         <IconButton
-                                            icon={<EditIcon />}
+                                            icon={<MdEdit />}
                                             borderRadius="full"
                                             color="white"
                                             bg="transparent"

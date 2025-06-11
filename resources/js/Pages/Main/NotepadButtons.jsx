@@ -8,10 +8,15 @@ import {
     MenuList,
     Tooltip,
 } from "@chakra-ui/react";
-import { DeleteIcon, HamburgerIcon, CheckIcon } from "@chakra-ui/icons";
-import { MdLightbulbOutline, MdSave, MdAutoFixHigh } from "react-icons/md";
+import {
+    MdLightbulbOutline,
+    MdOutlineSave,
+    MdAutoFixHigh,
+    MdCheck,
+    MdMenu,
+    MdDeleteOutline,
+} from "react-icons/md";
 import { HomeContext } from "./Contexts/HomeContext";
-import CheckDisplayIcon from "./CheckDisplayIcon";
 
 const NotepadButtons = ({ forMobile = false }) => {
     const homeContext = useContext(HomeContext);
@@ -29,7 +34,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                         variant="roundedWhite"
                         as={IconButton}
                         aria-label="Options"
-                        icon={<HamburgerIcon />}
+                        icon={<MdMenu />}
                     />
                     <MenuList
                         color="white"
@@ -41,7 +46,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                                 homeContext.getIsAllPromptsExpected(
                                     showingNotepad.id
                                 ) ? (
-                                    <CheckIcon />
+                                    <MdCheck />
                                 ) : (
                                     <MdLightbulbOutline />
                                 )
@@ -65,7 +70,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                             ジュモンを推理
                         </MenuItem>
                         <MenuItem
-                            icon={<MdSave />}
+                            icon={<MdOutlineSave />}
                             color="white"
                             bg="gray.800"
                             isDisabled={
@@ -91,7 +96,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                             魔法で変換
                         </MenuItem>
                         <MenuItem
-                            icon={<DeleteIcon />}
+                            icon={<MdDeleteOutline />}
                             color="red.200"
                             bg="gray.800"
                             onClick={() => {
@@ -111,7 +116,7 @@ const NotepadButtons = ({ forMobile = false }) => {
             <Box display={{ base: "none", lg: "block" }}>
                 <Tooltip label="メモ帳を削除" hasArrow>
                     <IconButton
-                        icon={<DeleteIcon />}
+                        icon={<MdDeleteOutline />}
                         variant="roundedWhite"
                         color="red"
                         ml={4}
@@ -120,6 +125,25 @@ const NotepadButtons = ({ forMobile = false }) => {
                                 showingNotepad.id
                             );
                         }}
+                    />
+                </Tooltip>
+                <Tooltip label="ページを保存" hasArrow>
+                    <IconButton
+                        icon={
+                            homeContext.getCurrentContentText() ===
+                            showingPage.written_content ? (
+                                <MdCheck />
+                            ) : (
+                                <MdOutlineSave />
+                            )
+                        }
+                        variant="roundedWhite"
+                        ml={4}
+                        onClick={homeContext.handleSaveShowingPageClick}
+                        isDisabled={
+                            homeContext.getCurrentContentText() ===
+                            showingPage.written_content
+                        }
                     />
                 </Tooltip>
                 <Tooltip label="ジュモンを推理" hasArrow>
@@ -136,22 +160,7 @@ const NotepadButtons = ({ forMobile = false }) => {
                                     : homeContext.onOpenDetectPromptModal
                             }
                         />
-                        {homeContext.getIsAllPromptsExpected(
-                            showingNotepad.id
-                        ) && <CheckDisplayIcon />}
                     </Box>
-                </Tooltip>
-                <Tooltip label="ページを保存" hasArrow>
-                    <IconButton
-                        icon={<MdSave />}
-                        variant="roundedWhite"
-                        ml={4}
-                        onClick={homeContext.handleSaveShowingPageClick}
-                        isDisabled={
-                            homeContext.getCurrentContentText() ===
-                            showingPage.written_content
-                        }
-                    />
                 </Tooltip>
                 <Tooltip label="魔法で変換" hasArrow>
                     <IconButton

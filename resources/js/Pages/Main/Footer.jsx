@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Box, Flex, IconButton } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useHomeContext } from "./Contexts/HomeContext";
 import NotepadButtons from "./NotepadButtons.jsx";
 
@@ -35,7 +35,7 @@ const Footer = () => {
                         >
                             <IconButton
                                 variant="roundedWhite"
-                                icon={<ChevronLeftIcon />}
+                                icon={<MdKeyboardArrowLeft />}
                                 onClick={() => {
                                     homeContext.handlePageChange(
                                         showingPage.notepad_id,
@@ -49,7 +49,7 @@ const Footer = () => {
                             </Box>
                             <IconButton
                                 variant="roundedWhite"
-                                icon={<ChevronRightIcon />}
+                                icon={<MdKeyboardArrowRight />}
                                 onClick={() => {
                                     homeContext.handlePageChange(
                                         showingPage.notepad_id,

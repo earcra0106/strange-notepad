@@ -1,10 +1,13 @@
 import React, { useRef } from "react";
+import { usePage } from "@inertiajs/react";
 import { useHomeContext } from "../Contexts/HomeContext";
 import { Box, Flex, Button } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { MdAdd } from "react-icons/md";
 import "./shelf-item.css";
 
 const Shelf = () => {
+    const { auth } = usePage().props;
+
     const homeContext = useHomeContext();
     const showingPage = homeContext.getShowingPage();
 
@@ -22,11 +25,12 @@ const Shelf = () => {
     return (
         <Flex p={4} direction="column" h="100%">
             <Button
-                leftIcon={<AddIcon />}
+                leftIcon={<MdAdd />}
                 variant={"roundedPurple"}
                 fontSize="lg"
                 mb={4}
                 onClick={homeContext.handleNewNotepadClick}
+                isDisabled={!auth.user}
             >
                 新規メモ帳
             </Button>
