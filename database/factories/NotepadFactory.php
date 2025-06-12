@@ -20,36 +20,35 @@ class NotepadFactory extends Factory
      */
     public function definition(): array
     {
-        $owner = User::factory()->create();
-        
+        // デフォルトのModifierPromptとChangePromptを取得
         $expectedModifierPrompt = ModifierPrompt::query()
             ->orderBy('id', 'asc')
-            ->first() ?? ModifierPrompt::factory()->create();
+            ->first();
 
         $expectedChangePrompt = ChangePrompt::query()
             ->orderBy('id', 'asc')
-            ->first() ?? ChangePrompt::factory()->create();
+            ->first();
 
+        // ランダムに選択されたModifierPromptとChangePromptを取得
+        // 一番最初のものを除外してランダムに選ぶ
         $modifierPrompt = ModifierPrompt::query()
             ->where('id' , '!=', $expectedModifierPrompt->id)
             ->where('is_deleted', false)
             ->inRandomOrder()
-            ->first() ?? ModifierPrompt::factory()->create();
+            ->first();
         
         $changePrompt = ChangePrompt::query()
             ->where('id' , '!=', $expectedChangePrompt->id)
             ->where('is_deleted', false)
             ->inRandomOrder()
-            ->first() ?? ChangePrompt::factory()->create();
+            ->first();
 
         return [
-            'user_id' => $owner->id,
             'name' => '未知のメモ帳',
             'expected_modifier_prompt_id' => $expectedModifierPrompt->id,
             'expected_change_prompt_id' => $expectedChangePrompt->id,
             'modifier_prompt_id' => $modifierPrompt->id,
             'change_prompt_id' => $changePrompt->id,
-            'original_user_id' => $owner->id,
             'is_deleted' => false,
         ];
     }

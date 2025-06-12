@@ -18,15 +18,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $testUser = $this->createTestData();
+        // マスタデータを作成する
+        foreach ($this->getMasterModifierPrompt() as $masterData) {
+            ModifierPrompt::factory()->create([
+                'name' => $masterData['name'],
+                'prompt' => $masterData['prompt'],
+                'is_deleted' => false,
+            ]);
+        }
 
-        User::factory(5)->create();
-        Notepad::factory(5)->create();
-        Page::factory(5)->create();
+        foreach ($this->getMasterChangePrompts() as $masterData) {
+            ChangePrompt::factory()->create([
+                'name' => $masterData['name'],
+                'prompt' => $masterData['prompt'],
+                'is_deleted' => false,
+            ]);
+        }
+
+        if (app()->isLocal()) {
+            $testUser = $this->createTestData();
+        }
     }
 
     /*
-     * テストデータ一式を生成する。
+     * テストデータを作成する
      */
     private function createTestData(): User
     {
@@ -38,42 +53,15 @@ class DatabaseSeeder extends Seeder
 
         $initialExpectedModifierPrompt = ModifierPrompt::factory()->create([
             'name' => 'ある特徴をもつ',
-            'prompt' => '冒頭に「このメモ帳には本来ありえない呪文が含まれています。\\nよろしければ、作者に不具合報告をお願いします。\\n」と加える。\nなお、このルールがある場合は口調や表現を変えない。',
+            'prompt' => '冒頭に「このメモ帳には本来ありえないジュモンが含まれています。\nよろしければ、作者に不具合の起きた状況をお伝えください。\n」と加えてください。\nなお、このルールがある場合は口調や表現を変えないでください。',
             'is_deleted' => false,
         ]);
 
         $initialExpectedChangePrompt = ChangePrompt::factory()->create([
             'name' => '何かが起こる',
-            'prompt' => '末尾に「\\nこのメモ帳には本来ありえない呪文が含まれています。\\nよろしければ、作者に不具合報告をお願いします。」と加える。\nなお、このルールがある場合は口調や表現を変えない。',
+            'prompt' => '末尾に「\nこのメモ帳には本来ありえないジュモンが含まれています。\nよろしければ、作者に不具合の起きた状況をお伝えください。」と加えてください。\nなお、このルールがある場合は口調や表現を変えないでください。',
             'is_deleted' => false,
         ]);
-
-        $testModifierPrompt = ModifierPrompt::factory()->create([
-            'name' => 'ウルトラハイテンションな',
-            'prompt' => '表現をとんでもなく誇張したり、めちゃくちゃ豪快にするなどして、テンションが超高い文にしてください。',
-        ]);
-
-        $testChangePrompt = ChangePrompt::factory()->create([
-            'name' => 'お嬢様言葉にする',
-            'prompt' => '口調をお嬢様みたいにしてください。',
-        ]);
-
-        // 追加のデータを生成
-        foreach ($this->getSampleModifierPrompts() as $sampleModifierPrompt) {
-            ModifierPrompt::factory()->create([
-                'name' => $sampleModifierPrompt['name'],
-                'prompt' => $sampleModifierPrompt['prompt'],
-                'is_deleted' => false,
-            ]);
-        }
-
-        foreach ($this->getSampleChangePrompts() as $sampleChangePrompt) {
-            ChangePrompt::factory()->create([
-                'name' => $sampleChangePrompt['name'],
-                'prompt' => $sampleChangePrompt['prompt'],
-                'is_deleted' => false,
-            ]);
-        }
 
         // Notepadのデータを10個作成
         for ($i = 1; $i <= 10; $i++) {
@@ -100,80 +88,104 @@ class DatabaseSeeder extends Seeder
     }
 
     // プロンプトデータを作成する
-    private function getSampleModifierPrompts(): array
+    private function getMasterModifierPrompt(): array
     {
         return [
             [
                 'name' => 'ネガティブな',
-                'prompt' => '過度にネガティブな表現にしてください。',
+                'prompt' => '過度にネガティブな表現にしてください。\n
+                例: 「今日は雨が降っている。」→「今日は雨が降っていて、どうしようもなく気分が沈む。」',
             ],
             [
                 'name' => 'ポジティブな',
-                'prompt' => 'やたらポジティブな表現にしてください。',
+                'prompt' => 'やたらポジティブな表現にしてください。\n
+                例: 「今日は雨が降っている。」→「今日は雨が降っていて、自然の恵みを感じる素晴らしい日だ！」',
             ],
             [
                 'name' => '絵文字が多すぎる',
-                'prompt' => '絵文字を山ほど追加してください。',
+                'prompt' => '絵文字を山ほど追加してください。\n
+                例: 「今日は雨が降っている。」→「今日は雨が降っているよ☔️😭🌧️😱💦🌂😢🌈」',
             ],
             [
                 'name' => 'ウルトラハイテンションな',
-                'prompt' => '表現をとんでもなく誇張したり、めちゃくちゃ豪快にするなどして、テンションが超高い文にしてください。',
+                'prompt' => '表現をとんでもなく誇張したり、めちゃくちゃ豪快にするなどして、テンションが超高い文にしてください。\n
+                例: 「今日は雨が降っている。」→「やっばーーーい！！今日は雨がドッシャーーーンと降ってて、テンション爆上がりだぜぇぇぇ！！！」',
             ],
             [
-                'name' => '冗長な',
-                'prompt' => 'ウザイくらい冗長にしてください。',
+                'name' => '嘘過ぎる',
+                'prompt' => 'あらゆる内容において元の文章と反対の内容にしてください。\n
+                例: 「今日は雨が降っている。」→「今日は晴れだ。」',
             ],
             [
                 'name' => '要約された',
-                'prompt' => '極端に要約してください。',
+                'prompt' => '極端に要約してください。極端に。\n
+                例: 「今日は雨が降っている。」→「雨。」',
             ],
             [
-                'name' => '100%理系な',
-                'prompt' => '理系の人が好みそうな表現を追加してください。',
+                'name' => 'アナウンサーっぽい',
+                'prompt' => 'アナウンサーのような情報的な表現にしてください。\n
+                例: 「今日は雨が降っている。」→「本日は、全国的に降雨が観測されており、特に関東地方では強い雨が降り続いております。」',
             ],
             [
-                'name' => 'ぜったい経済学部な',
-                'prompt' => '経済学部の人が好みそうな表現を追加してください。',
+                'name' => 'コミュ障な',
+                'prompt' => 'コミュ障の人が話すような語彙力を絞った表現にしてください。\n
+                例: 「今日は雨が降っている。」→「あの、今日は、雨が、降ってるんですよね…」',
+            ],
+            [
+                'name' => 'クソデカ',
+                'prompt' => '形容詞をやかましいくらい派手に付け足してください。テンションは元の文章を維持してください。\n
+                例: 「今日は雨が降っている。」→「今日というこの日は、街一帯を押し流すレベルの猛烈な雨が歴史的な勢いで降り注ぎまくっている。」',
             ],
         ];
     }
 
-    private function getSampleChangePrompts(): array
+    private function getMasterChangePrompts(): array
     {
         return [
             [
-                'name' => 'タメ口にする',
-                'prompt' => '本文をタメ口にしてください。',
+                'name' => 'お嬢様言葉にする',
+                'prompt' => '口調をお嬢様みたいにしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→「あなた様はとても素敵な方でいらっしゃいますわ。」',
             ],
             [
-                'name' => '英語にする',
-                'prompt' => '本文を英語に翻訳してください。',
+                'name' => 'タメ口にする',
+                'prompt' => '本文をタメ口にしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→「お前、めっちゃいいやつじゃん。」',
+            ],
+            [
+                'name' => 'クールな感じにする',
+                'prompt' => '本文をクールでキザな口調にしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→「君は、なかなかいいセンスを持っているようだ。」',
             ],
             [
                 'name' => '子供っぽい口調にする',
-                'prompt' => '本文を子供っぽい口調にしてください。',
+                'prompt' => '本文を子供っぽい口調にしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→「キミってすっごくいい人だね！」',
             ],
             [
                 'name' => '関西弁にする',
-                'prompt' => '本文を関西弁にしてください。',
+                'prompt' => '本文を関西弁にしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→「あんた、めっちゃええ人やな。」',
             ],
             [
                 'name' => '詩人風にする',
-                'prompt' => '本文に比喩表現を多く使って、詩人風にしてください。',
+                'prompt' => '本文に比喩表現を多く使って、詩人風にしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→「あなた様は、まるで春の陽射しのように、心を温めてくださる存在でございます。」',
             ],
             [
-                'name' => '胡散臭い口調にする',
-                'prompt' => 
-                    'ひらがなの部分を一部だけカタカナに変えたり、語尾を「～ダヨォ」や「～カモネェ」などに変えて、胡散臭い口調にしてください。\n' .
-                    '例: 「今日はいい天気だ。こんな日にはピクニックでもしようかな？」→「今日はイイ天気ダネェ。こんな日ニハ、ピクニックでもシヨッカナァ？」',
-            ],
-            [
-                'name' => '若者言葉にする',
-                'prompt' => '本文をナウなヤングにウケそうな若者言葉にしてください。',
+                'name' => 'ギャルにする',
+                'prompt' => '本文をギャルっぽい口調にしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→ 「あんた、マジでイケてるじゃん」',
             ],
             [
                 'name' => '箇条書きにする',
-                'prompt' => '本文を箇条書きにしてください。「・」を項目の先頭に付けてください。',
+                'prompt' => '本文を箇条書きにしてください。「・」を項目の先頭に付けてください。\n
+                例: 「あなたはとても素敵な方ですね。」→「・あなたはとても素敵な方です。\n・あなたの存在は素晴らしいです。」',
+            ],
+            [
+                'name' => 'ハゲ',
+                'prompt' => '「ハゲ」という言葉を織り交ぜた文章にしてください。\n
+                例: 「あなたはとても素敵な方ですね。」→ 「あなたはとても素敵なハゲですね。」',
             ],
         ];
     }

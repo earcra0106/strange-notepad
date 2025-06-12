@@ -17,8 +17,6 @@ class ChangePromptFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'テストの変更をする',
-            'prompt' => '本文の冒頭に「これはテストの変更です。\\n」と加える。',
             'is_deleted' => false,
         ];
     }
