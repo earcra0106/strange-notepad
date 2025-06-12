@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Grid, ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { Box, Flex, Grid, ChakraProvider } from "@chakra-ui/react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import Content from "./Content";
@@ -14,6 +14,7 @@ import NoChangeModal from "./NoChangeModal";
 import ConfirmChangeModal from "./ConfirmChangeModal";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import ConfirmPageChangeWhenUnsavedModal from "./ConfirmPageChangeWhenUnsavedModal";
+import TuterialModal from "./TuterialModal";
 
 const Home = ({ notepads, modifierPrompts, changePrompts }) => {
     const contextValue = useHomeContextValue(
@@ -75,6 +76,7 @@ const Home = ({ notepads, modifierPrompts, changePrompts }) => {
                         />
                     </>
                 ) : null}
+                <TuterialModal />
             </HomeContext.Provider>
         </ChakraProvider>
     );

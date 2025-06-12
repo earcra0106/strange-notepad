@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
-import { HomeContext } from "../Contexts/HomeContext";
 
 const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const [allNotepads, setAllNotepads] = useState(notepads);
@@ -47,6 +46,12 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         isOpen: isConfirmPageChangeWhenUnsavedModalOpen,
         onOpen: onOpenConfirmPageChangeWhenUnsavedModal,
         onClose: onCloseConfirmPageChangeWhenUnsavedModal,
+    } = useDisclosure();
+
+    const {
+        isOpen: isTuterialModalOpen,
+        onOpen: onOpenTuterialModal,
+        onClose: onCloseTuterialModal,
     } = useDisclosure();
 
     const getPageChangeTargetPageNumber = () => {
@@ -413,6 +418,10 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
         isConfirmPageChangeWhenUnsavedModalOpen,
         onOpenConfirmPageChangeWhenUnsavedModal,
         onCloseConfirmPageChangeWhenUnsavedModal,
+
+        isTuterialModalOpen,
+        onOpenTuterialModal,
+        onCloseTuterialModal,
 
         getPageChangeTargetPageNumber,
         setPageChangeTargetPageNumber,
