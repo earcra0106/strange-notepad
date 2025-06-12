@@ -272,10 +272,9 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
             const newNotepad = response.data;
 
             if (
-                newNotepad.expected_modifier_prompt_id ===
+                newNotepad.modifier_prompt_id ===
                     new_expected_modifier_prompt_id &&
-                newNotepad.expected_change_prompt_id ===
-                    new_expected_change_prompt_id
+                newNotepad.change_prompt_id === new_expected_change_prompt_id
             ) {
                 onOpenNotepadDetectedModal();
             }
