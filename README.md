@@ -1,4 +1,4 @@
-# Strange Notepad
+# 魔法のメモ帳
 
 ### 実装済み
 
