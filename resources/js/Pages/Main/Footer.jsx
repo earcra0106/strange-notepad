@@ -15,7 +15,9 @@ const Footer = () => {
 
     const requestPageChange = (notepadId, pageNumber) => {
         if (
-            homeContext.getCurrentContentText() !== showingPage.written_content
+            homeContext.getCurrentContentText() !==
+                showingPage.written_content &&
+            !showingPage.is_changed_by_prompt
         ) {
             homeContext.setPageChangeTargetNotepadId(notepadId);
             homeContext.setPageChangeTargetPageNumber(pageNumber);

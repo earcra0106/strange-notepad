@@ -14,7 +14,9 @@ const Shelf = () => {
     const requestPageChange = (notepadId) => {
         if (
             showingPage &&
-            homeContext.getCurrentContentText() !== showingPage.written_content
+            homeContext.getCurrentContentText() !==
+                showingPage.written_content &&
+            !showingPage.is_changed_by_prompt
         ) {
             homeContext.setPageChangeTargetNotepadId(notepadId);
             homeContext.setPageChangeTargetPageNumber(1);
