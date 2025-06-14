@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
-import axios from "axios";
+import axios from "../../../axios";
 
 const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     const [allNotepads, setAllNotepads] = useState(notepads);
