@@ -1,6 +1,6 @@
 import ModalTemplete from "./ModalTemplete";
 import { Box, Flex, Select } from "@chakra-ui/react";
-import { useHomeContext } from "./Contexts/HomeContext";
+import { useHomeContext } from "../Contexts/HomeContext";
 import { useState, useEffect } from "react";
 
 const DetectPromptModal = () => {

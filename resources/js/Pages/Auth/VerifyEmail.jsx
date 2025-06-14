@@ -1,50 +1,74 @@
-import PrimaryButton from '@/Components/PrimaryButton';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import {
+    Box,
+    Button,
+    Text,
+    Alert,
+    AlertIcon,
+    Flex,
+    Spacer,
+    ChakraProvider,
+    Heading,
+} from "@chakra-ui/react";
+import GuestLayout from "@/Layouts/GuestLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
+import authTheme from "@/Theme/AuthTheme";
 
 export default function VerifyEmail({ status }) {
     const { post, processing } = useForm({});
 
     const submit = (e) => {
         e.preventDefault();
-
-        post(route('verification.send'));
+        post(route("verification.send"));
     };
 
     return (
-        <GuestLayout>
-            <Head title="Email Verification" />
+        <ChakraProvider theme={authTheme}>
+            <GuestLayout>
+                <Head title="Email Verification" />
 
-            <div className="mb-4 text-sm text-gray-600">
-                Thanks for signing up! Before getting started, could you verify
-                your email address by clicking on the link we just emailed to
-                you? If you didn't receive the email, we will gladly send you
-                another.
-            </div>
+                <Heading as="h2" size="md" mb={6} textAlign="center">
+                    メールアドレスの認証
+                </Heading>
 
-            {status === 'verification-link-sent' && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    A new verification link has been sent to the email address
-                    you provided during registration.
-                </div>
-            )}
+                <Box mb={4}>
+                    <Text fontSize="sm" color="gray.600">
+                        ご登録ありがとうございます！ご利用を開始する前に、登録したメールアドレス宛に送信された認証リンクをクリックしてメールアドレスを認証してください。
+                        <br />
+                        メールが届いていない場合は、下のボタンから再送信できます。
+                    </Text>
+                </Box>
 
-            <form onSubmit={submit}>
-                <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>
-                        Resend Verification Email
-                    </PrimaryButton>
+                {status === "verification-link-sent" && (
+                    <Alert status="success" mb={4} fontSize="sm">
+                        <AlertIcon />
+                        新しい認証リンクをメールアドレスに送信しました。
+                    </Alert>
+                )}
 
-                    <Link
-                        href={route('logout')}
-                        method="post"
-                        as="button"
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Log Out
-                    </Link>
-                </div>
-            </form>
-        </GuestLayout>
+                <form onSubmit={submit}>
+                    <Flex mt={4} align="center" gap={4}>
+                        <Button
+                            variant="roundedPurple"
+                            fontSize="sm"
+                            type="submit"
+                            isLoading={processing}
+                        >
+                            認証メールを再送信
+                        </Button>
+                        <Spacer />
+                        <Button
+                            as={Link}
+                            href={route("logout")}
+                            method="post"
+                            variant="link"
+                            color="gray.600"
+                            fontSize="sm"
+                        >
+                            ログアウト
+                        </Button>
+                    </Flex>
+                </form>
+            </GuestLayout>
+        </ChakraProvider>
     );
 }

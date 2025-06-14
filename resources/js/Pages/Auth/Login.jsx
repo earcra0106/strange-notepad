@@ -1,100 +1,127 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import {
+    Box,
+    Button,
+    Checkbox,
+    FormControl,
+    FormLabel,
+    Input,
+    FormErrorMessage,
+    Text,
+    Heading,
+    Flex,
+    Link as ChakraLink,
+    ChakraProvider,
+} from "@chakra-ui/react";
+import GuestLayout from "@/Layouts/GuestLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
+import authTheme from "@/Theme/AuthTheme";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
+        email: "",
+        password: "",
         remember: false,
     });
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'), {
-            onFinish: () => reset('password'),
+        post(route("login"), {
+            onFinish: () => reset("password"),
         });
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <ChakraProvider theme={authTheme}>
+            <GuestLayout>
+                <Head title="Log in" />
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
+                <Heading as="h2" size="md" mb={6} textAlign="center">
+                    ログイン
+                </Heading>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                {status && (
+                    <Text
+                        mb={4}
+                        fontSize="sm"
+                        fontWeight="medium"
+                        color="green.600"
+                    >
+                        {status}
+                    </Text>
+                )}
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                <form onSubmit={submit}>
+                    <FormControl isInvalid={!!errors.email} mb={4}>
+                        <FormLabel htmlFor="email">メールアドレス</FormLabel>
+                        <Input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value={data.email}
+                            autoComplete="username"
+                            autoFocus
+                            onChange={(e) => setData("email", e.target.value)}
+                            borderRadius="full"
+                        />
+                        <FormErrorMessage>{errors.email}</FormErrorMessage>
+                    </FormControl>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+                    <FormControl isInvalid={!!errors.password} mb={4}>
+                        <FormLabel htmlFor="password">パスワード</FormLabel>
+                        <Input
+                            id="password"
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            autoComplete="current-password"
+                            onChange={(e) =>
+                                setData("password", e.target.value)
+                            }
+                            borderRadius="full"
+                        />
+                        <FormErrorMessage>{errors.password}</FormErrorMessage>
+                    </FormControl>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
+                    <FormControl mb={4}>
                         <Checkbox
                             name="remember"
-                            checked={data.remember}
+                            isChecked={data.remember}
                             onChange={(e) =>
-                                setData('remember', e.target.checked)
+                                setData("remember", e.target.checked)
                             }
-                        />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
-                    </label>
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
-                            Forgot your password?
-                        </Link>
-                    )}
+                            ログイン状態を保持する
+                        </Checkbox>
+                    </FormControl>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
+                    <Flex mt={4} align="center" justify="flex-end" gap={4}>
+                        {canResetPassword && (
+                            <ChakraLink
+                                as={Link}
+                                href={route("password.request")}
+                                fontSize="sm"
+                                color="gray.600"
+                                _hover={{
+                                    color: "gray.900",
+                                    textDecoration: "underline",
+                                }}
+                            >
+                                パスワードを忘れた場合はこちら
+                            </ChakraLink>
+                        )}
+
+                        <Button
+                            variant={"roundedPurple"}
+                            fontSize={"md"}
+                            type="submit"
+                            isLoading={processing}
+                        >
+                            ログイン
+                        </Button>
+                    </Flex>
+                </form>
+            </GuestLayout>
+        </ChakraProvider>
     );
 }

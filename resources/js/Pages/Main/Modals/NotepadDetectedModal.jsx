@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Box, Flex } from "@chakra-ui/react";
-import { HomeContext } from "./Contexts/HomeContext";
+import { HomeContext } from "../Contexts/HomeContext";
 import ModalTemplete from "./ModalTemplete.jsx";
 import Confetti from "react-confetti";
 

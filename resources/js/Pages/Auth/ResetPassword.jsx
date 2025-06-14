@@ -1,94 +1,111 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, useForm } from '@inertiajs/react';
+import {
+    Box,
+    Button,
+    FormControl,
+    FormLabel,
+    Input,
+    FormErrorMessage,
+    Heading,
+    ChakraProvider,
+} from "@chakra-ui/react";
+import GuestLayout from "@/Layouts/GuestLayout";
+import { Head, useForm } from "@inertiajs/react";
+import authTheme from "@/Theme/AuthTheme";
 
 export default function ResetPassword({ token, email }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,
-        email: email,
-        password: '',
-        password_confirmation: '',
+        email: email || "",
+        password: "",
+        password_confirmation: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('password.store'), {
-            onFinish: () => reset('password', 'password_confirmation'),
+        post(route("password.store"), {
+            onFinish: () => reset("password", "password_confirmation"),
         });
     };
 
     return (
-        <GuestLayout>
-            <Head title="Reset Password" />
+        <ChakraProvider theme={authTheme}>
+            <GuestLayout>
+                <Head title="Reset Password" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                <Heading as="h2" size="md" mb={6} textAlign="center">
+                    パスワード再設定
+                </Heading>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                <form onSubmit={submit}>
+                    <FormControl isInvalid={!!errors.email} mb={4}>
+                        <FormLabel htmlFor="email">メールアドレス</FormLabel>
+                        <Input
+                            borderRadius="full"
+                            id="email"
+                            type="email"
+                            name="email"
+                            value={data.email}
+                            autoComplete="username"
+                            onChange={(e) => setData("email", e.target.value)}
+                        />
+                        <FormErrorMessage>{errors.email}</FormErrorMessage>
+                    </FormControl>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+                    <FormControl isInvalid={!!errors.password} mb={4}>
+                        <FormLabel htmlFor="password">
+                            新しいパスワード
+                        </FormLabel>
+                        <Input
+                            borderRadius="full"
+                            id="password"
+                            type="password"
+                            name="password"
+                            value={data.password}
+                            autoComplete="new-password"
+                            onChange={(e) =>
+                                setData("password", e.target.value)
+                            }
+                            autoFocus
+                        />
+                        <FormErrorMessage>{errors.password}</FormErrorMessage>
+                    </FormControl>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <FormControl
+                        isInvalid={!!errors.password_confirmation}
+                        mb={4}
+                    >
+                        <FormLabel htmlFor="password_confirmation">
+                            新しいパスワード（確認用）
+                        </FormLabel>
+                        <Input
+                            borderRadius="full"
+                            id="password_confirmation"
+                            type="password"
+                            name="password_confirmation"
+                            value={data.password_confirmation}
+                            autoComplete="new-password"
+                            onChange={(e) =>
+                                setData("password_confirmation", e.target.value)
+                            }
+                        />
+                        <FormErrorMessage>
+                            {errors.password_confirmation}
+                        </FormErrorMessage>
+                    </FormControl>
 
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        isFocused={true}
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
-
-                    <TextInput
-                        type="password"
-                        id="password_confirmation"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
-                    />
-
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Reset Password
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
+                    <Box mt={4} display="flex" justifyContent="flex-end">
+                        <Button
+                            variant="roundedPurple"
+                            fontSize="sm"
+                            type="submit"
+                            isLoading={processing}
+                        >
+                            パスワードを再設定
+                        </Button>
+                    </Box>
+                </form>
+            </GuestLayout>
+        </ChakraProvider>
     );
 }

@@ -1,14 +1,27 @@
-import DangerButton from '@/Components/DangerButton';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import Modal from '@/Components/Modal';
-import SecondaryButton from '@/Components/SecondaryButton';
-import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import {
+    Box,
+    Button,
+    Text,
+    Heading,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    ModalCloseButton,
+    FormControl,
+    FormLabel,
+    Input,
+    FormErrorMessage,
+    Stack,
+} from "@chakra-ui/react";
+import { useForm } from "@inertiajs/react";
+import { useRef } from "react";
 
-export default function DeleteUserForm({ className = '' }) {
-    const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
+export default function DeleteUserForm({ className = "" }) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const passwordInput = useRef();
 
     const {
@@ -20,101 +33,101 @@ export default function DeleteUserForm({ className = '' }) {
         errors,
         clearErrors,
     } = useForm({
-        password: '',
+        password: "",
     });
 
     const confirmUserDeletion = () => {
-        setConfirmingUserDeletion(true);
+        onOpen();
     };
 
     const deleteUser = (e) => {
         e.preventDefault();
 
-        destroy(route('profile.destroy'), {
+        destroy(route("profile.destroy"), {
             preserveScroll: true,
-            onSuccess: () => closeModal(),
-            onError: () => passwordInput.current.focus(),
+            onSuccess: () => handleClose(),
+            onError: () => passwordInput.current?.focus(),
             onFinish: () => reset(),
         });
     };
 
-    const closeModal = () => {
-        setConfirmingUserDeletion(false);
-
+    const handleClose = () => {
+        onClose();
         clearErrors();
         reset();
     };
 
     return (
-        <section className={`space-y-6 ${className}`}>
-            <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Delete Account
-                </h2>
+        <Box className={className}>
+            <Heading as="h2" size="md" color="red.600" mb={2}>
+                アカウント削除
+            </Heading>
+            <Text fontSize="sm" color="gray.600" mb={4}>
+                アカウントを削除すると、すべてのデータが完全に削除されます。
+            </Text>
+            <Button
+                colorScheme="red"
+                onClick={confirmUserDeletion}
+                borderRadius="full"
+                px={6}
+            >
+                アカウントを削除
+            </Button>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Once your account is deleted, all of its resources and data
-                    will be permanently deleted. Before deleting your account,
-                    please download any data or information that you wish to
-                    retain.
-                </p>
-            </header>
-
-            <DangerButton onClick={confirmUserDeletion}>
-                Delete Account
-            </DangerButton>
-
-            <Modal show={confirmingUserDeletion} onClose={closeModal}>
-                <form onSubmit={deleteUser} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete your account?
-                    </h2>
-
-                    <p className="mt-1 text-sm text-gray-600">
-                        Once your account is deleted, all of its resources and
-                        data will be permanently deleted. Please enter your
-                        password to confirm you would like to permanently delete
-                        your account.
-                    </p>
-
-                    <div className="mt-6">
-                        <InputLabel
-                            htmlFor="password"
-                            value="Password"
-                            className="sr-only"
-                        />
-
-                        <TextInput
-                            id="password"
-                            type="password"
-                            name="password"
-                            ref={passwordInput}
-                            value={data.password}
-                            onChange={(e) =>
-                                setData('password', e.target.value)
-                            }
-                            className="mt-1 block w-3/4"
-                            isFocused
-                            placeholder="Password"
-                        />
-
-                        <InputError
-                            message={errors.password}
-                            className="mt-2"
-                        />
-                    </div>
-
-                    <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>
-                            Cancel
-                        </SecondaryButton>
-
-                        <DangerButton className="ms-3" disabled={processing}>
-                            Delete Account
-                        </DangerButton>
-                    </div>
-                </form>
+            <Modal isOpen={isOpen} onClose={handleClose} isCentered>
+                <ModalOverlay />
+                <ModalContent borderRadius="2xl">
+                    <ModalHeader>本当にアカウントを削除しますか？</ModalHeader>
+                    <ModalCloseButton />
+                    <form onSubmit={deleteUser}>
+                        <ModalBody>
+                            <Text fontSize="sm" color="gray.600" mb={4}>
+                                アカウントを削除すると、すべてのデータが完全に削除されます。パスワードを入力して削除を確定してください。
+                            </Text>
+                            <FormControl isInvalid={!!errors.password}>
+                                <FormLabel htmlFor="password" srOnly>
+                                    パスワード
+                                </FormLabel>
+                                <Input
+                                    borderRadius="full"
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    ref={passwordInput}
+                                    value={data.password}
+                                    onChange={(e) =>
+                                        setData("password", e.target.value)
+                                    }
+                                    placeholder="パスワード"
+                                    autoFocus
+                                />
+                                <FormErrorMessage>
+                                    {errors.password}
+                                </FormErrorMessage>
+                            </FormControl>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Stack direction="row" spacing={3}>
+                                <Button
+                                    onClick={handleClose}
+                                    variant="ghost"
+                                    borderRadius="full"
+                                >
+                                    キャンセル
+                                </Button>
+                                <Button
+                                    borderRadius="full"
+                                    colorScheme="red"
+                                    type="submit"
+                                    isLoading={processing}
+                                >
+                                    削除する
+                                </Button>
+                            </Stack>
+                        </ModalFooter>
+                    </form>
+                </ModalContent>
             </Modal>
-        </section>
+        </Box>
     );
 }

@@ -1,6 +1,6 @@
 import ModalTemplete from "./ModalTemplete";
 import { Box } from "@chakra-ui/react";
-import { useHomeContext } from "./Contexts/HomeContext";
+import { useHomeContext } from "../Contexts/HomeContext";
 
 const NoChangeModal = () => {
     const homeContext = useHomeContext();

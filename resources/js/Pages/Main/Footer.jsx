@@ -4,7 +4,7 @@ import { Box, Flex, IconButton } from "@chakra-ui/react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { useHomeContext } from "./Contexts/HomeContext";
 import NotepadButtons from "./NotepadButtons.jsx";
-import ConfirmPageChangeWhenUnsavedModal from "./ConfirmPageChangeWhenUnsavedModal";
+import ConfirmPageChangeWhenUnsavedModal from "./Modals/ConfirmPageChangeWhenUnsavedModal";
 
 const Footer = () => {
     const homeContext = useHomeContext();

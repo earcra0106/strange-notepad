@@ -7,14 +7,14 @@ import Footer from "./Footer";
 import { HomeContext } from "./Contexts/HomeContext";
 import useHomeContextValue from "./Hooks/useHomeContextValue";
 import LoadOverlay from "./LoadOverlay";
-import theme from "./Theme/Theme";
-import DetectPromptModal from "./DetectPromptModal";
-import NotepadDetectedModal from "./NotepadDetectedModal";
-import NoChangeModal from "./NoChangeModal";
-import ConfirmChangeModal from "./ConfirmChangeModal";
-import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import ConfirmPageChangeWhenUnsavedModal from "./ConfirmPageChangeWhenUnsavedModal";
-import TuterialModal from "./TuterialModal";
+import theme from "@/Theme/Theme";
+import DetectPromptModal from "./Modals/DetectPromptModal";
+import NotepadDetectedModal from "./Modals/NotepadDetectedModal";
+import NoChangeModal from "./Modals/NoChangeModal";
+import ConfirmChangeModal from "./Modals/ConfirmChangeModal";
+import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
+import ConfirmPageChangeWhenUnsavedModal from "./Modals/ConfirmPageChangeWhenUnsavedModal";
+import TuterialModal from "./Modals/TuterialModal";
 
 const Home = ({ notepads, modifierPrompts, changePrompts }) => {
     const contextValue = useHomeContextValue(

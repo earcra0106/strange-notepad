@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import ModalTemplete from "./ModalTemplete";
-import { useHomeContext } from "./Contexts/HomeContext";
+import { useHomeContext } from "../Contexts/HomeContext";
 import {
     MdLightbulbOutline,
     MdLogin,

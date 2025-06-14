@@ -1,16 +1,28 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Transition } from '@headlessui/react';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import {
+    Box,
+    Button,
+    FormControl,
+    FormLabel,
+    Input,
+    FormErrorMessage,
+    Heading,
+    Text,
+    Alert,
+    AlertIcon,
+    VStack,
+    HStack,
+    Link as ChakraLink,
+} from "@chakra-ui/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import { useState } from "react";
 
-export default function UpdateProfileInformation({
+export default function UpdateProfileInformationForm({
     mustVerifyEmail,
     status,
-    className = '',
+    className = "",
 }) {
     const user = usePage().props.auth.user;
+    const [showSaved, setShowSaved] = useState(false);
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
@@ -20,94 +32,102 @@ export default function UpdateProfileInformation({
 
     const submit = (e) => {
         e.preventDefault();
-
-        patch(route('profile.update'));
+        patch(route("profile.update"), {
+            onSuccess: () => {
+                setShowSaved(true);
+                setTimeout(() => setShowSaved(false), 2000);
+            },
+        });
     };
 
     return (
-        <section className={className}>
-            <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Profile Information
-                </h2>
+        <Box as="section" className={className}>
+            <Heading as="h2" size="md" mb={2}>
+                プロフィール情報
+            </Heading>
+            <Text fontSize="sm" color="gray.600" mb={4}>
+                アカウントのプロフィール情報とメールアドレスを更新できます。
+            </Text>
 
-                <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
-                </p>
-            </header>
+            <form onSubmit={submit}>
+                <VStack spacing={4} align="stretch">
+                    <FormControl isInvalid={!!errors.name}>
+                        <FormLabel htmlFor="name">ユーザー名</FormLabel>
+                        <Input
+                            borderRadius="full"
+                            id="name"
+                            value={data.name}
+                            onChange={(e) => setData("name", e.target.value)}
+                            required
+                            autoComplete="name"
+                        />
+                        <FormErrorMessage>{errors.name}</FormErrorMessage>
+                    </FormControl>
 
-            <form onSubmit={submit} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <FormControl isInvalid={!!errors.email}>
+                        <FormLabel htmlFor="email">メールアドレス</FormLabel>
+                        <Input
+                            borderRadius="full"
+                            id="email"
+                            type="email"
+                            value={data.email}
+                            onChange={(e) => setData("email", e.target.value)}
+                            required
+                            autoComplete="username"
+                        />
+                        <FormErrorMessage>{errors.email}</FormErrorMessage>
+                    </FormControl>
 
-                    <TextInput
-                        id="name"
-                        className="mt-1 block w-full"
-                        value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                        isFocused
-                        autoComplete="name"
-                    />
+                    {mustVerifyEmail && user.email_verified_at === null && (
+                        <Box>
+                            <Text fontSize="sm" color="gray.800" mb={2}>
+                                メールアドレスが未認証です。
+                                <ChakraLink
+                                    as={Link}
+                                    href={route("verification.send")}
+                                    method="post"
+                                    fontSize="sm"
+                                    color="gray.600"
+                                    textDecoration="underline"
+                                    _hover={{ color: "gray.900" }}
+                                    ml={2}
+                                >
+                                    認証メールを再送信
+                                </ChakraLink>
+                            </Text>
+                            {status === "verification-link-sent" && (
+                                <Alert
+                                    status="success"
+                                    fontSize="sm"
+                                    py={1}
+                                    mt={2}
+                                >
+                                    <AlertIcon />
+                                    新しい認証リンクを送信しました。
+                                </Alert>
+                            )}
+                        </Box>
+                    )}
 
-                    <InputError className="mt-2" message={errors.name} />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                        autoComplete="username"
-                    />
-
-                    <InputError className="mt-2" message={errors.email} />
-                </div>
-
-                {mustVerifyEmail && user.email_verified_at === null && (
-                    <div>
-                        <p className="mt-2 text-sm text-gray-800">
-                            Your email address is unverified.
-                            <Link
-                                href={route('verification.send')}
-                                method="post"
-                                as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                                Click here to re-send the verification email.
-                            </Link>
-                        </p>
-
-                        {status === 'verification-link-sent' && (
-                            <div className="mt-2 text-sm font-medium text-green-600">
-                                A new verification link has been sent to your
-                                email address.
-                            </div>
+                    <HStack spacing={4} mt={2}>
+                        <Button
+                            borderRadius="full"
+                            fontSize="sm"
+                            px={6}
+                            colorScheme="purple"
+                            type="submit"
+                            isLoading={processing}
+                        >
+                            保存
+                        </Button>
+                        {showSaved && (
+                            <Text fontSize="sm" color="gray.600">
+                                保存しました
+                            </Text>
                         )}
-                    </div>
-                )}
-
-                <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-gray-600">
-                            Saved.
-                        </p>
-                    </Transition>
-                </div>
+                    </HStack>
+                </VStack>
             </form>
-        </section>
+        </Box>
     );
 }

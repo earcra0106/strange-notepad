@@ -20,6 +20,7 @@ import {
     MdPerson,
     MdPersonAdd,
 } from "react-icons/md";
+import ApplicationLogo from "@/Components/ApplicationLogo";
 
 const Sidebar = () => {
     const homeContext = useHomeContext();
@@ -30,6 +31,16 @@ const Sidebar = () => {
             <Box p={4} h="100vh">
                 <Flex direction={"column"} h="100%">
                     <Flex p={4} fontSize="lg" fontWeight="bold" align="center">
+                        <ApplicationLogo
+                            style={{
+                                width: "40px",
+                                height: "40px",
+                                marginRight: "12px",
+                                objectFit: "contain",
+                                aspectRatio: "1 / 1",
+                                display: "block",
+                            }}
+                        />
                         <Text>{import.meta.env.VITE_APP_NAME}</Text>
                         <IconButton
                             ml={1}
