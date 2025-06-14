@@ -1,8 +1,9 @@
 FROM laravelsail/php83-composer:latest
 
-# Node.js, npmのインストール
+# Node.js, npm, PostgreSQLドライバのインストール
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get install -y nodejs \
+    && docker-php-ext-install pdo_pgsql pgsql
 
 WORKDIR /var/www/html
 
