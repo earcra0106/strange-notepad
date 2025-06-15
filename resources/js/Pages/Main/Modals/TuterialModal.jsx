@@ -115,13 +115,49 @@ const TuterialModal = () => {
             </Box>
             <Box mt={4}>
                 <Heading as="h2" size="md" mb={4} mt={6}>
-                    クレジット
+                    クレジット / 技術スタック
                 </Heading>
                 <Box mb={2}>
                     ソースコード:{" "}
-                    <Text as="a" href="#" color="blue.500" target="_blank">
+                    <Text
+                        as="a"
+                        href="https://github.com/earcra0106/strange-notepad"
+                        color="blue.500"
+                        target="_blank"
+                    >
                         GitHub
                     </Text>
+                    <br />
+                    バックエンド: Laravel
+                    <br />
+                    フロントエンド: React
+                    <br />
+                    デザイン: Chakra UI
+                    <br />
+                    アイコン:{" "}
+                    <Text
+                        as="a"
+                        href="https://react-icons.github.io/react-icons/"
+                        color="blue.500"
+                        target="_blank"
+                    >
+                        React Icons
+                    </Text>
+                    <br />
+                    デプロイ: Render
+                    <br />
+                    API: OpenAI (GPT-4o mini)
+                    <br />
+                    開発者:{" "}
+                    <Text
+                        as="a"
+                        href="https://github.com/earcra0106"
+                        color="blue.500"
+                        target="_blank"
+                    >
+                        earcra0106
+                    </Text>
+                    <br />
                 </Box>
             </Box>
         </Box>
