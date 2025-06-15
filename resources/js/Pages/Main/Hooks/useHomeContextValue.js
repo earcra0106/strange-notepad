@@ -223,8 +223,10 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             const newNotepad = response.data;
             updateOrCreateNotepadInBrowser(newNotepad, true);
+        } catch (error) {
+        } finally {
             setIsLoading(false);
-        } catch (error) {}
+        }
     };
 
     // Notepadを削除するボタンをクリックしたときの処理
@@ -237,8 +239,10 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
 
             setShowingPage(null);
             deleteNotepadFromBrowser(notepad_id, true);
+        } catch (error) {
+        } finally {
             setIsLoading(false);
-        } catch (error) {}
+        }
     };
 
     // Notepadの情報を変更するボタンをクリックしたときの処理
