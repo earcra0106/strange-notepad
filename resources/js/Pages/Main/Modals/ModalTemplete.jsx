@@ -34,7 +34,8 @@ const ModalTemplete = ({
                         <Flex gap={2} justifyContent="flex-end">
                             {type === "confirm" && (
                                 <Button
-                                    variant="roundedPurple"
+                                    borderRadius="full"
+                                    colorScheme="purple"
                                     onClick={() => {
                                         onConfirm();
                                     }}

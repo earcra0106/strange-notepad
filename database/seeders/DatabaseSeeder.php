@@ -18,6 +18,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $initialExpectedModifierPrompt = ModifierPrompt::factory()->create([
+            'name' => 'ある特徴をもつ',
+            'prompt' => '冒頭に「このメモ帳には本来ありえないジュモンが含まれています。\nよろしければ、作者に不具合の起きた状況をお伝えください。\n」と加えてください。\nなお、このルールがある場合は口調や表現を変えないでください。',
+            'is_deleted' => false,
+        ]);
+
+        $initialExpectedChangePrompt = ChangePrompt::factory()->create([
+            'name' => '何かが起こる',
+            'prompt' => '末尾に「\nこのメモ帳には本来ありえないジュモンが含まれています。\nよろしければ、作者に不具合の起きた状況をお伝えください。」と加えてください。\nなお、このルールがある場合は口調や表現を変えないでください。',
+            'is_deleted' => false,
+        ]);
+
         // マスタデータを作成する
         foreach ($this->getMasterModifierPrompt() as $masterData) {
             ModifierPrompt::factory()->create([
@@ -36,14 +48,17 @@ class DatabaseSeeder extends Seeder
         }
 
         if (app()->isLocal()) {
-            $testUser = $this->createTestData();
+            $testUser = $this->createTestData(
+                $initialExpectedModifierPrompt->id,
+                $initialExpectedChangePrompt->id
+            );
         }
     }
 
     /*
      * テストデータを作成する
      */
-    private function createTestData(): User
+    private function createTestData($initialExpectedModifierPromptId, $initialExpectedChangePromptId): User
     {
         $testUser = User::factory()->create([
             'name' => 'test',
@@ -51,25 +66,13 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('test'),
         ]);
 
-        $initialExpectedModifierPrompt = ModifierPrompt::factory()->create([
-            'name' => 'ある特徴をもつ',
-            'prompt' => '冒頭に「このメモ帳には本来ありえないジュモンが含まれています。\nよろしければ、作者に不具合の起きた状況をお伝えください。\n」と加えてください。\nなお、このルールがある場合は口調や表現を変えないでください。',
-            'is_deleted' => false,
-        ]);
-
-        $initialExpectedChangePrompt = ChangePrompt::factory()->create([
-            'name' => '何かが起こる',
-            'prompt' => '末尾に「\nこのメモ帳には本来ありえないジュモンが含まれています。\nよろしければ、作者に不具合の起きた状況をお伝えください。」と加えてください。\nなお、このルールがある場合は口調や表現を変えないでください。',
-            'is_deleted' => false,
-        ]);
-
         // Notepadのデータを10個作成
         for ($i = 1; $i <= 10; $i++) {
             $testNotepad = Notepad::factory()->create([
                 'user_id' => $testUser->id,
                 'name' => 'test notepad ' . $i,
-                'expected_modifier_prompt_id' => $initialExpectedModifierPrompt->id,
-                'expected_change_prompt_id' => $initialExpectedChangePrompt->id,
+                'expected_modifier_prompt_id' => $initialExpectedModifierPromptId,
+                'expected_change_prompt_id' => $initialExpectedChangePromptId,
                 'original_user_id' => $testUser->id,
             ]);
 
