@@ -218,22 +218,26 @@ const useHomeContextValue = (notepads, modifierPrompts, changePrompts) => {
     // Notepadを新規作成するボタンをクリックしたときの処理
     const handleNewNotepadClick = async () => {
         try {
+            setIsLoading(true);
             const response = await axios.post("/notepad");
 
             const newNotepad = response.data;
             updateOrCreateNotepadInBrowser(newNotepad, true);
+            setIsLoading(false);
         } catch (error) {}
     };
 
     // Notepadを削除するボタンをクリックしたときの処理
     const handleDeleteNotepadClick = async (notepad_id) => {
         try {
+            setIsLoading(true);
             const response = await axios.delete(`/notepad`, {
                 data: { notepad_id: notepad_id },
             });
 
             setShowingPage(null);
             deleteNotepadFromBrowser(notepad_id, true);
+            setIsLoading(false);
         } catch (error) {}
     };
 
