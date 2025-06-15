@@ -41,7 +41,7 @@ const Sidebar = () => {
                                 display: "block",
                             }}
                         />
-                        <Text>{import.meta.env.VITE_APP_NAME}</Text>
+                        <Text>魔法のメモ帳</Text>
                         <IconButton
                             ml={1}
                             icon={<MdHelp size="18px" />}

@@ -40,8 +40,7 @@ const TuterialModal = () => {
                     どんなアプリ?
                 </Heading>
                 <Text>
-                    「{import.meta.env.VITE_APP_NAME}
-                    」は、書いたメモの内容が変化してしまう不思議なメモ帳ゲームアプリです。
+                    「魔法のメモ帳」は、書いたメモの内容が変化してしまう不思議なメモ帳ゲームアプリです。
                 </Text>
             </Box>
             <Box mt={4}>
